@@ -8,10 +8,12 @@ final router = GoRouter(
     GoRoute(
       path: '/groups',
       builder: (context, state) => const GroupListView(),
-    ),
-    GoRoute(
-      path: '/groups/:id',
-      builder: (context, state) => GroupView(groupId: state.pathParameters['id']!),
+      routes: [
+        GoRoute(
+          path: ':id',
+          builder: (context, state) => GroupView(groupId: state.pathParameters['id']!),
+        ),
+      ],
     ),
   ],
 );
