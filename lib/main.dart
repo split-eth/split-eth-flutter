@@ -4,7 +4,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:split_eth_flutter/vendor/web3/contracts/group_factory.dart';
+import 'package:split_eth_flutter/vendor/web3/contracts/group_factory_contract.dart';
 import 'package:split_eth_flutter/router.dart';
 import 'package:split_eth_flutter/vendor/web3/config.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
@@ -25,9 +25,7 @@ void main() async {
   await Web3Service().init(config);
 
   // smart contracts
-  GetIt.I.registerSingletonAsync(
-    () async => GroupFactoryContract.init("0x50665e1d7A94891034506C2D51b409945a37C5E4", Web3Service().ethClient),
-  );
+  GetIt.I.registerSingletonAsync(() async => GroupFactoryContract.init("0x50665e1d7A94891034506C2D51b409945a37C5E4"));
 
   // GetIt.I.get<LocalGroupRepo>().removeAllGroups();
 

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:split_eth_flutter/repos/local_group_repo.dart';
 import 'package:split_eth_flutter/value_objects/group_id.dart';
 import 'package:split_eth_flutter/vendor/web3/config.dart';
-import 'package:split_eth_flutter/vendor/web3/contracts/group_factory.dart';
+import 'package:split_eth_flutter/vendor/web3/contracts/group_factory_contract.dart';
 import 'package:web3dart/web3dart.dart';
 
 import '../../models/group.dart';
