@@ -9,19 +9,20 @@ class GroupView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final group = context.select((GroupController c) => c.group);
+    final id = context.select((GroupController c) => c.group.id);
+    final entries = context.select((GroupController c) => c.group.entries);
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('Group ${group.id}'),
+        title: Text('Group $id'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.go('/groups/${group.id}/add_entry'),
+        onPressed: () => context.go('/groups/$id/add_entry'),
         child: const Icon(Icons.add),
       ),
       body: ListView.builder(
-        itemCount: group.entries.length,
-        itemBuilder: (context, index) => GroupEntryItem(groupEntry: group.entries[index]),
+        itemCount: entries.length,
+        itemBuilder: (context, index) => GroupEntryItem(groupEntry: entries[index]),
       ),
     );
   }

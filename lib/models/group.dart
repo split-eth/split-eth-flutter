@@ -17,7 +17,7 @@ class Group extends Equatable {
   final List<GroupEntry> entries;
 
   @override
-  List<Object> get props => [id, entries];
+  List<Object> get props => [id];
 
   Group copyWith({
     List<GroupEntry>? entries,
