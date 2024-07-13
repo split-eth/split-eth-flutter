@@ -10,7 +10,7 @@ class GroupFactoryContract {
   final Web3Client _client;
 
   Future<EthereumAddress> getAddress(
-    EthereumAddress provider,
+    EthereumAddress token,
     String salt,
   ) async {
     final function = _contract.function('getAddress');
@@ -18,25 +18,27 @@ class GroupFactoryContract {
     _client.call(
       contract: _contract,
       function: _contract.function('getAddress'),
-      params: [provider, convertStringToUint8List(salt)],
+      params: [token, convertStringToUint8List(salt)],
     );
 
     final result = await _client.call(
       contract: _contract,
       function: function,
-      params: [provider, convertStringToUint8List(salt)],
+      params: [token, convertStringToUint8List(salt)],
     );
 
     return result[0] as EthereumAddress;
   }
 
   Uint8List createGroupCallData(
-    EthereumAddress provider,
+    EthereumAddress owner,
+    EthereumAddress token,
     String salt,
+    String name,
   ) {
     final function = _contract.function('createGroup');
 
-    return function.encodeCall([provider, convertStringToUint8List(salt)]);
+    return function.encodeCall([owner, token, convertStringToUint8List(salt), name]);
   }
 
   static Future<GroupFactoryContract> init(String contractAddress, Web3Client client) async {
