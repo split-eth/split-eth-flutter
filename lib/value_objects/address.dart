@@ -15,4 +15,7 @@ class Address extends Equatable {
 
   @override
   List<Object> get props => [_address];
+
+  factory Address.fromJson(String address) => Address(address);
+  String toJson() => _address;
 }
