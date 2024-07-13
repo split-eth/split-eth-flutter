@@ -8,20 +8,21 @@ import 'package:split_eth_flutter/repos/local_group_repo.dart';
 import '../../value_objects/group_id.dart';
 
 class GroupController extends ChangeNotifier {
-  GroupController._(Group group) : _group = group;
+  GroupController._(GroupId groupId) : _groupId = groupId;
 
-  final Group _group;
+  final GroupId _groupId;
+
+  Group get group => GetIt.I<LocalGroupRepo>().getGroupById(_groupId);
 
   Widget createView() {
     return ChangeNotifierProvider.value(
       value: this,
-      child: GroupView(group: _group),
+      child: const GroupView(),
     );
   }
 
   static final Map<GroupId, GroupController> _instances = {};
   static GroupController of(GroupId groupId) {
-    final Group group = GetIt.I<LocalGroupRepo>().getGroupById(groupId);
-    return _instances.putIfAbsent(groupId, () => GroupController._(group));
+    return _instances.putIfAbsent(groupId, () => GroupController._(groupId));
   }
 }

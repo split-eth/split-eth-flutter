@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:split_eth_flutter/features/group/controller.dart';
 import 'package:split_eth_flutter/features/group/widgets/group_entry.dart';
-import 'package:split_eth_flutter/models/group.dart';
 
 class GroupView extends StatelessWidget {
-  const GroupView({
-    super.key,
-    required this.group,
-  });
-
-  final Group group;
+  const GroupView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final group = context.select((GroupController c) => c.group);
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Group ${group.id}'),
@@ -22,8 +20,8 @@ class GroupView extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       body: ListView.builder(
-        itemCount: 5, // TODO
-        itemBuilder: (context, index) => const GroupEntry(),
+        itemCount: group.entries.length,
+        itemBuilder: (context, index) => const GroupEntry(), // TODO
       ),
     );
   }
