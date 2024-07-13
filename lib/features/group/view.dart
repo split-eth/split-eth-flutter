@@ -16,7 +16,7 @@ class GroupView extends StatelessWidget {
         title: Text('Group ${group.id}'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.go('/groups/new'), // TODO
+        onPressed: () => context.go('/groups/${group.id}/add_entry'),
         child: const Icon(Icons.add),
       ),
       body: ListView.builder(

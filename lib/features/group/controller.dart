@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:split_eth_flutter/features/group/view.dart';
 import 'package:split_eth_flutter/models/group.dart';
 import 'package:split_eth_flutter/repos/local_group_repo.dart';
 
@@ -14,10 +13,10 @@ class GroupController extends ChangeNotifier {
 
   Group get group => GetIt.I<LocalGroupRepo>().getGroupById(_groupId);
 
-  Widget createView() {
+  Widget withView(Widget child) {
     return ChangeNotifierProvider.value(
       value: this,
-      child: const GroupView(),
+      child: child,
     );
   }
 
