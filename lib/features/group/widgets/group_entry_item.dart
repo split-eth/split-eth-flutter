@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class GroupEntry extends StatelessWidget {
-  const GroupEntry({super.key});
+class GroupEntryItem extends StatelessWidget {
+  const GroupEntryItem({super.key});
 
   @override
   Widget build(BuildContext context) {
