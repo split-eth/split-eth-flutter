@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:split_eth_flutter/contracts/session_account_manager_contract.dart';
+import 'package:split_eth_flutter/vendor/web3/contracts/group_factory.dart';
 import 'package:split_eth_flutter/router.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
 
@@ -19,7 +19,7 @@ void main() async {
 
   // smart contracts
   GetIt.I.registerSingletonAsync(
-    () async => SessionAccountManagerContract.init("0xd7c475A674e2CD36e7a8DA19F73738c53D02Cd6E"),
+    () async => GroupFactoryContract.init("0x50665e1d7A94891034506C2D51b409945a37C5E4", Web3Service().ethClient),
   );
 
   // GetIt.I.get<LocalGroupRepo>().removeAllGroups();

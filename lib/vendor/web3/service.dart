@@ -149,6 +149,7 @@ class Web3Service {
     await _contractProfile.init();
   }
 
+  Web3Client get ethClient => _ethClient;
   EthereumAddress get account => _account;
   EthereumAddress get tokenAddress => _contractToken.rcontract.address;
   EthereumAddress get entrypointAddress => _entryPoint.rcontract.address;
