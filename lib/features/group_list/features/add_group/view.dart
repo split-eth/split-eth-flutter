@@ -20,7 +20,10 @@ class AddGroupView extends StatelessWidget {
           label: 'Enter Group ID',
           // NOTE: needed to show "done" button on iOS
           keyboardType: const TextInputType.numberWithOptions(signed: true),
-          onFieldSubmitted: (String value) => _joinGroup(context, GroupId(value)),
+          onFieldSubmitted: (String value) {
+            context.pop();
+            context.go('/groups/joining?id=$value');
+          },
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -29,15 +32,14 @@ class AddGroupView extends StatelessWidget {
         ElevatedButton.icon(
           icon: const Icon(Icons.add),
           label: const Text('Create Group'),
-          onPressed: () => _joinGroup(context, GroupId.random()),
+          onPressed: () async {
+            // TODO deploy group contract
+            final Group group = Group(id: GroupId.random(), entries: const []);
+            context.read<GroupListController>().addLocalGroup(group);
+            context.pop();
+          },
         ),
       ],
     );
-  }
-
-  void _joinGroup(BuildContext context, GroupId id) {
-    final Group group = Group(id: id, entries: const []);
-    context.read<GroupListController>().addGroup(group);
-    context.go('/groups/$id'); // TODO go to share page?
   }
 }

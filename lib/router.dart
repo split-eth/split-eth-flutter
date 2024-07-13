@@ -3,6 +3,7 @@ import 'package:split_eth_flutter/features/group/controller.dart';
 import 'package:split_eth_flutter/features/group/features/add_group_entry/view.dart';
 import 'package:split_eth_flutter/features/group/view.dart';
 import 'package:split_eth_flutter/features/group_list/controller.dart';
+import 'package:split_eth_flutter/features/group_list/features/joining_group/view.dart';
 import 'package:split_eth_flutter/features/group_list/view.dart';
 import 'package:split_eth_flutter/value_objects/group_id.dart';
 
@@ -20,6 +21,13 @@ GoRouter createRouterConfig() {
           GoRoute(
             path: 'new',
             pageBuilder: (_, __) => DialogPage(builder: (_) => GroupListController.withView(const AddGroupView())),
+          ),
+          GoRoute(
+            path: 'joining',
+            pageBuilder: (_, state) {
+              final GroupId groupId = GroupId(state.uri.queryParameters['id']!);
+              return DialogPage(builder: (_) => GroupListController.withView(JoiningGroupView(groupId: groupId)));
+            },
           ),
           GoRoute(
               path: ':id',

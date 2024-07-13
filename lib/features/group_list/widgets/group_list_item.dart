@@ -19,7 +19,7 @@ class GroupListItem extends StatelessWidget {
         children: [
           SlidableAction(
             onPressed: (context) {
-              context.read<GroupListController>().removeGroup(group);
+              context.read<GroupListController>().removeLocalGroup(group);
             },
             label: 'Delete',
             backgroundColor: Colors.red,
