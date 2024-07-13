@@ -18,6 +18,13 @@ class LocalGroupRepo {
     _prefs.remove('$namespace/${group.id}');
   }
 
+  void removeAllGroups() {
+    _prefs
+        .getKeys()
+        .where((key) => key.startsWith('$namespace/'))
+        .forEach(_prefs.remove);
+  }
+
   List<Group> getGroups() {
     return _prefs
         .getKeys()

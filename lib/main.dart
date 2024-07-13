@@ -9,6 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GetIt.I.registerSingleton(await SharedPreferences.getInstance());
   GetIt.I.registerLazySingleton(() => LocalGroupRepo());
+  // GetIt.I.get<LocalGroupRepo>().removeAllGroups();
   runApp(const MainApp());
 }
 
