@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:split_eth_flutter/vendor/web3/service.dart';
 import 'package:split_eth_flutter/vendor/web3/utils/uint8.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -12,13 +13,22 @@ class SessionAccountManagerContract {
     EthereumAddress provider,
     EthereumAddress owner,
     String salt,
-  ) {
+  ) async {
     final Uint8List calldata = _contract.function('getAddress').encodeCall([
       provider,
       owner,
       convertStringToUint8List(salt),
     ]);
 
+    // TODO you go Kevin!!!!
+
+    // final (_, userop) = await Web3Service().prepareUserop(
+    //   [_contract.address.toString()],
+    //   [calldata],
+    // );
+
+    // // TODO but I only need to read?????
+    // final txHash = await Web3Service().submitUserop(userop);
     // TODO
     // web3service.prepareUserop
     // web3service.submitUserop

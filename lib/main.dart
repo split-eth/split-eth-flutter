@@ -14,9 +14,8 @@ void main() async {
   GetIt.I.registerSingleton(await SharedPreferences.getInstance());
   GetIt.I.registerLazySingleton(() => LocalGroupRepo());
 
-  // web3 service
+  // init web3 service
   await Web3Service().initFromBundle();
-  GetIt.I.registerSingleton(Web3Service());
 
   // smart contracts
   GetIt.I.registerSingletonAsync(
