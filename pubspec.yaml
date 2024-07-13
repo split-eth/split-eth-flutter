@@ -38,6 +38,7 @@ flutter:
     # assets that our app loads
     - lib/assets/config.json
     - lib/assets/group_factory.abi.json
+    - lib/assets/session_account_manager.abi.json
     # junk to make Kevin's code compile, probably not used
     - packages/smartcontracts/contracts/external/CardFactory.abi.json
     - packages/smartcontracts/contracts/standards/ERC20.abi.json
