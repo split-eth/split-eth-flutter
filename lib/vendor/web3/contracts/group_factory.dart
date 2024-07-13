@@ -13,18 +13,10 @@ class GroupFactoryContract {
     EthereumAddress token,
     String salt,
   ) async {
-    final function = _contract.function('getAddress');
-
-    _client.call(
-      contract: _contract,
-      function: _contract.function('getAddress'),
-      params: [token, convertStringToUint8List(salt)],
-    );
-
     final result = await _client.call(
       contract: _contract,
-      function: function,
-      params: [token, convertStringToUint8List(salt)],
+      function: _contract.function('getAddress'),
+      params: [token, convertStringToUint8List(salt, forcePadLength: 32)],
     );
 
     return result[0] as EthereumAddress;
