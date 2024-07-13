@@ -12,6 +12,13 @@ class LocalGroupRepo {
   final SharedPreferences _prefs = GetIt.I.get<SharedPreferences>();
 
   void addGroup(Group group) {
+    if (_prefs.containsKey('$namespace/${group.id}')) {
+      throw Exception('Group already exists');
+    }
+    updateGroup(group);
+  }
+
+  void updateGroup(Group group) {
     _prefs.setString('$namespace/${group.id}', _jsonEncoder.convert(group.toJson()));
   }
 

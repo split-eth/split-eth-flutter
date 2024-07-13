@@ -17,7 +17,16 @@ class Group extends Equatable {
   final List<GroupEntry> entries;
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id, entries];
+
+  Group copyWith({
+    List<GroupEntry>? entries,
+  }) {
+    return Group(
+      id: id,
+      entries: entries ?? this.entries,
+    );
+  }
 
   factory Group.fromJson(Map<String, dynamic> json) => _$GroupFromJson(json);
   Map<String, dynamic> toJson() => _$GroupToJson(this);

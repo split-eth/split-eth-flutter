@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:split_eth_flutter/models/group.dart';
+import 'package:split_eth_flutter/models/group_entry.dart';
 import 'package:split_eth_flutter/repos/local_group_repo.dart';
 
 import '../../value_objects/group_id.dart';
@@ -12,6 +13,12 @@ class GroupController extends ChangeNotifier {
   final GroupId _groupId;
 
   Group get group => GetIt.I<LocalGroupRepo>().getGroupById(_groupId);
+
+  void addEntry(GroupEntry entry) {
+    final newGroup = group.copyWith(entries: [...group.entries, entry]);
+    GetIt.I<LocalGroupRepo>().updateGroup(newGroup);
+    notifyListeners();
+  }
 
   Widget withView(Widget child) {
     return ChangeNotifierProvider.value(
