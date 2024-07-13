@@ -14,7 +14,6 @@ class JoiningGroupView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO make indismissible
     return SimpleDialog(
       contentPadding: const EdgeInsets.all(24),
       children: [
@@ -32,7 +31,8 @@ class JoiningGroupView extends StatelessWidget {
                     snapshot.error.toString(),
                     style: const TextStyle(color: Colors.red),
                   ),
-                  TextButton(
+                  const SizedBox(height: 16),
+                  ElevatedButton(
                     onPressed: () {
                       context.pop();
                       context.go('/groups/new');

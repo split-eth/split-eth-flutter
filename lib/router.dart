@@ -26,7 +26,10 @@ GoRouter createRouterConfig() {
             path: 'joining',
             pageBuilder: (_, state) {
               final GroupId groupId = GroupId(state.uri.queryParameters['id']!);
-              return DialogPage(builder: (_) => GroupListController.withView(JoiningGroupView(groupId: groupId)));
+              return DialogPage(
+                barrierDismissible: false,
+                builder: (_) => GroupListController.withView(JoiningGroupView(groupId: groupId)),
+              );
             },
           ),
           GoRoute(
