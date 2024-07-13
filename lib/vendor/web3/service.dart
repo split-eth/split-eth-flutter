@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart';
 import 'package:split_eth_flutter/vendor/web3/config.dart';
 import 'package:split_eth_flutter/vendor/web3/services/api/api.dart';
@@ -64,12 +63,6 @@ class Web3Service {
   late ProfileContract _contractProfile;
 
   late EIP1559GasPriceEstimator _gasPriceEstimator;
-
-  Future<void> initFromBundle() async {
-    final jsonStr = await rootBundle.loadString('lib/contracts/config.json');
-    final config = Config.fromJson(jsonDecode(jsonStr));
-    await init(config);
-  }
 
   Future<void> init(Config config) async {
     _url = config.node.url;
