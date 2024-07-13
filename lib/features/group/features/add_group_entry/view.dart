@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:split_eth_flutter/atoms/seth_text_field.dart';
 import 'package:split_eth_flutter/features/group/controller.dart';
@@ -17,6 +18,13 @@ class AddGroupEntryView extends StatefulWidget {
 class _AddGroupEntryViewState extends State<AddGroupEntryView> {
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+
+  @override
+  void dispose() {
+    _valueController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +55,12 @@ class _AddGroupEntryViewState extends State<AddGroupEntryView> {
 
   void _addEntry() {
     final GroupEntry groupEntry = GroupEntry(
-      address: Address('TODO'),
-      amount: 0,
-      note: 'TODO',
+      address: Address('TODO'), // TODO
+      amount: int.parse(_valueController.text),
+      note: _noteController.text,
     );
 
-    context.read<GroupController>().removeEntry(groupEntry);
+    context.read<GroupController>().addEntry(groupEntry);
+    context.pop();
   }
 }
