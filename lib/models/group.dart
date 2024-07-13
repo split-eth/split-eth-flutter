@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../value_objects/group_id.dart';
 import 'group_entry.dart';
 
 part 'group.g.dart';
@@ -12,7 +13,7 @@ class Group extends Equatable {
     required this.entries,
   });
 
-  final String id;
+  final GroupId id;
   final List<GroupEntry> entries;
 
   @override

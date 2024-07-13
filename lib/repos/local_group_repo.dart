@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:split_eth_flutter/models/group.dart';
+import 'package:split_eth_flutter/value_objects/group_id.dart';
 
 const namespace = 'groups';
 
@@ -33,8 +34,8 @@ class LocalGroupRepo {
         .toList();
   }
 
-  Group getGroupById(String id) {
-    return _getGroupByKey('$namespace/$id');
+  Group getGroupById(GroupId groupId) {
+    return _getGroupByKey('$namespace/$groupId');
   }
 
   Group _getGroupByKey(String key) {
