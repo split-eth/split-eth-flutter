@@ -15,6 +15,11 @@ class GroupListController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeGroup(Group group) {
+    GetIt.I.get<LocalGroupRepo>().removeGroup(group);
+    notifyListeners();
+  }
+
   static final GroupListController _instance = GroupListController._();
   static Widget withView(Widget child) {
     return ChangeNotifierProvider.value(

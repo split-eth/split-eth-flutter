@@ -14,6 +14,10 @@ class LocalGroupRepo {
     _prefs.setString('$namespace/${group.id}', _jsonEncoder.convert(group.toJson()));
   }
 
+  void removeGroup(Group group) {
+    _prefs.remove('$namespace/${group.id}');
+  }
+
   List<Group> getGroups() {
     return _prefs
         .getKeys()

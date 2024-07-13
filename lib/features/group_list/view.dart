@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:split_eth_flutter/features/group_list/widgets/group_button.dart';
 
 import '../../models/group.dart';
 import 'controller.dart';
@@ -22,13 +23,7 @@ class GroupListView extends StatelessWidget {
       ),
       body: ListView.builder(
         itemCount: groups.length,
-        itemBuilder: (context, index) {
-          final Group group = groups[index];
-          return ListTile(
-            title: Text('Group ${group.id}'),
-            onTap: () => context.go('/groups/${group.id}'),
-          );
-        },
+        itemBuilder: (context, index) => GroupButton(group: groups[index]),
       ),
     );
   }
