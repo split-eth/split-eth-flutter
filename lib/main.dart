@@ -20,7 +20,7 @@ void main() async {
 
   // web3 config
   GetIt.I.registerSingletonAsync(() async {
-    final jsonStr = await rootBundle.loadString('lib/contracts/config.json');
+    final jsonStr = await rootBundle.loadString('lib/assets/config.json');
     return Config.fromJson(jsonDecode(jsonStr));
   });
 
