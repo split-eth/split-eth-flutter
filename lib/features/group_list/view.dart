@@ -16,6 +16,10 @@ class GroupListView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Groups'),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.go('/groups/new'),
+        child: const Icon(Icons.add),
+      ),
       body: ListView.builder(
         itemCount: groups.length,
         itemBuilder: (context, index) {
