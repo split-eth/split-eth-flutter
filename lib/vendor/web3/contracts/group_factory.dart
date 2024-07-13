@@ -42,7 +42,7 @@ class GroupFactoryContract {
   }
 
   static Future<GroupFactoryContract> init(String contractAddress, Web3Client client) async {
-    final json = await rootBundle.loadString('lib/contracts/session_account_manager.abi.json');
+    final json = await rootBundle.loadString('lib/assets/group_factory.abi.json');
     final abi = ContractAbi.fromJson(json, 'SessionAccountManager');
     final contract = DeployedContract(abi, EthereumAddress.fromHex(contractAddress));
     return GroupFactoryContract._(contract, client);
