@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:split_eth_flutter/features/add_group/view.dart';
+import 'package:split_eth_flutter/features/add_group/controller.dart';
 import 'package:split_eth_flutter/features/group/view.dart';
 import 'package:split_eth_flutter/features/group_list/controller.dart';
 
@@ -15,7 +15,7 @@ GoRouter createRouterConfig() {
         routes: [
           GoRoute(
             path: 'new',
-            pageBuilder: (_, __) => DialogPage(builder: (_) => const AddGroupView()),
+            pageBuilder: (_, __) => DialogPage(builder: (_) => AddGroupController.createView()),
           ),
           GoRoute(
             path: ':id',

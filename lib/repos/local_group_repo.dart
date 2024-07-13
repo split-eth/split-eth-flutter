@@ -27,7 +27,10 @@ class LocalGroupRepo {
   }
 
   Group _getGroupByKey(String key) {
-    final String value = _prefs.getString('$namespace/$key') ?? '{}';
+    final String? value = _prefs.getString(key);
+    if (value == null) {
+      throw Exception('Group not found');
+    }
     return Group.fromJson(jsonDecode(value));
   }
 }
