@@ -41,3 +41,4 @@ flutter:
     - packages/smartcontracts/contracts/accounts/Account.abi.json
     - packages/smartcontracts/contracts/accounts/AccountFactory.abi.json
     - packages/smartcontracts/contracts/apps/Profile.abi.json
+    - lib/contracts/session_account_manager.abi.json
