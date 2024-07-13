@@ -15,7 +15,7 @@ class GroupView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Group $group'),
+        title: Text('Group ${group.id}'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.go('/groups/new'), // TODO

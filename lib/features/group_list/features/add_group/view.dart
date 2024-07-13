@@ -42,7 +42,7 @@ class AddGroupView extends StatelessWidget {
   }
 
   void _joinGroup(BuildContext context, String id) {
-    final Group group = Group(id: id);
+    final Group group = Group(id: id, entries: const []);
     context.read<GroupListController>().addGroup(group);
     context.go('/groups/$id'); // TODO go to share page?
   }
