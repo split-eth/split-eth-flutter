@@ -4,17 +4,22 @@ import 'package:provider/provider.dart';
 import 'package:split_eth_flutter/repos/local_group_repo.dart';
 
 import '../../models/group.dart';
-import 'view.dart';
 
 class GroupListController extends ChangeNotifier {
   GroupListController._();
 
   List<Group> get groups => GetIt.I.get<LocalGroupRepo>().getGroups();
 
-  static Widget createView() {
-    return ChangeNotifierProvider(
-      create: (_) => GroupListController._(),
-      child: const GroupListView(),
+  void addGroup(Group group) {
+    GetIt.I.get<LocalGroupRepo>().addGroup(group);
+    notifyListeners();
+  }
+
+  static final GroupListController _instance = GroupListController._();
+  static Widget withView(Widget child) {
+    return ChangeNotifierProvider.value(
+      value: _instance,
+      child: child,
     );
   }
 }
