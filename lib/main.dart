@@ -7,12 +7,8 @@ import 'repos/local_group_repo.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  GetIt.I.registerSingletonAsync(() async => await SharedPreferences.getInstance());
-  GetIt.I.registerSingletonAsync(() async {
-    return LocalGroupRepo(
-      await GetIt.I.getAsync<SharedPreferences>(),
-    );
-  });
+  GetIt.I.registerSingleton(await SharedPreferences.getInstance());
+  GetIt.I.registerLazySingleton(() => LocalGroupRepo());
   runApp(const MainApp());
 }
 
