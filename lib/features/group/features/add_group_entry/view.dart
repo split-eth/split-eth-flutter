@@ -52,6 +52,6 @@ class _AddGroupEntryViewState extends State<AddGroupEntryView> {
       note: 'TODO',
     );
 
-    context.read<GroupController>().addEntry(groupEntry);
+    context.read<GroupController>().removeEntry(groupEntry);
   }
 }

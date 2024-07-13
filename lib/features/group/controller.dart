@@ -20,6 +20,13 @@ class GroupController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeEntry(GroupEntry entry) {
+    final newEntries = group.entries.where((e) => e != entry).toList();
+    final newGroup = group.copyWith(entries: newEntries);
+    GetIt.I<LocalGroupRepo>().updateGroup(newGroup);
+    notifyListeners();
+  }
+
   Widget withView(Widget child) {
     return ChangeNotifierProvider.value(
       value: this,

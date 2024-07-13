@@ -21,7 +21,7 @@ class GroupView extends StatelessWidget {
       ),
       body: ListView.builder(
         itemCount: group.entries.length,
-        itemBuilder: (context, index) => const GroupEntryItem(), // TODO
+        itemBuilder: (context, index) => GroupEntryItem(groupEntry: group.entries[index]),
       ),
     );
   }
