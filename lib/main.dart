@@ -19,10 +19,10 @@ void main() async {
   GetIt.I.registerLazySingleton(() => LocalGroupRepo());
 
   // web3 config
-  GetIt.I.registerSingletonAsync(() async {
-    final jsonStr = await rootBundle.loadString('lib/assets/config.json');
-    return Config.fromJson(jsonDecode(jsonStr));
-  });
+  final jsonStr = await rootBundle.loadString('lib/assets/config.json');
+  Config config = Config.fromJson(jsonDecode(jsonStr));
+  GetIt.I.registerSingleton(config);
+  await Web3Service().init(config);
 
   // smart contracts
   GetIt.I.registerSingletonAsync(
@@ -40,7 +40,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _init(),
+      future: GetIt.I.allReady(),
       builder: (_, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
@@ -51,10 +51,5 @@ class MainApp extends StatelessWidget {
         );
       },
     );
-  }
-
-  Future<void> _init() async {
-    await GetIt.I.allReady();
-    await Web3Service().init(GetIt.I.get<Config>());
   }
 }
