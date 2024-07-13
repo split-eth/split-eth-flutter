@@ -35,10 +35,13 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    # assets that our app loads
+    - lib/contracts/config.json
+    - lib/contracts/session_account_manager.abi.json
+    # junk to make Kevin's code compile, probably not used
     - packages/smartcontracts/contracts/external/CardFactory.abi.json
     - packages/smartcontracts/contracts/standards/ERC20.abi.json
     - packages/smartcontracts/contracts/accounts/TokenEntryPoint.abi.json
     - packages/smartcontracts/contracts/accounts/Account.abi.json
     - packages/smartcontracts/contracts/accounts/AccountFactory.abi.json
     - packages/smartcontracts/contracts/apps/Profile.abi.json
-    - lib/contracts/session_account_manager.abi.json

@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart';
+import 'package:split_eth_flutter/vendor/web3/config.dart';
 import 'package:split_eth_flutter/vendor/web3/services/api/api.dart';
 import 'package:split_eth_flutter/vendor/web3/services/indexer/signed_request.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/account.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/account_factory.dart';
-import 'package:split_eth_flutter/vendor/web3/contracts/card_manager.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/entrypoint.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/erc20.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/profile.dart';
@@ -57,7 +58,6 @@ class Web3Service {
   late EthPrivateKey _credentials;
 
   late ERC20Contract _contractToken;
-  late CardManagerContract _cardManager;
   late AccountFactoryContract _accountFactory;
   late TokenEntryPointContract _entryPoint;
   late AccountContract _contractAccount;
@@ -65,31 +65,24 @@ class Web3Service {
 
   late EIP1559GasPriceEstimator _gasPriceEstimator;
 
-  Future<void> init(
-    String rpcUrl,
-    String ipfsUrl,
-    String bundlerUrl,
-    String indexerUrl,
-    String indexerIPFSUrl,
-    String paymasterUrl,
-    String paymasterAddress,
-    String cardManagerAddress,
-    String accountFactoryAddress,
-    String entryPointAddress,
-    String tokenAddress,
-    String profileAddress,
-  ) async {
-    _url = rpcUrl;
-    _ipfsUrl = ipfsUrl;
+  Future<void> initFromBundle() async {
+    final jsonStr = await rootBundle.loadString('lib/contracts/config.json');
+    final config = Config.fromJson(jsonDecode(jsonStr));
+    await init(config);
+  }
+
+  Future<void> init(Config config) async {
+    _url = config.node.url;
+    _ipfsUrl = config.ipfs.url;
     _ethClient = Web3Client(_url, _client);
 
-    _rpc = APIService(baseURL: rpcUrl);
-    _ipfs = APIService(baseURL: ipfsUrl);
+    _rpc = APIService(baseURL: _url);
+    _ipfs = APIService(baseURL: _ipfsUrl);
 
-    _indexer = APIService(baseURL: indexerUrl);
-    _indexerIPFS = APIService(baseURL: indexerIPFSUrl);
-    _bundlerRPC = APIService(baseURL: '$bundlerUrl/$paymasterAddress');
-    _paymasterRPC = APIService(baseURL: '$paymasterUrl/$paymasterAddress');
+    _indexer = APIService(baseURL: config.indexer.url);
+    _indexerIPFS = APIService(baseURL: config.indexer.ipfsUrl);
+    _bundlerRPC = APIService(baseURL: '${config.erc4337.rpcUrl}/${config.erc4337.paymasterAddress}');
+    _paymasterRPC = APIService(baseURL: '${config.erc4337.paymasterRPCUrl}/${config.erc4337.paymasterAddress}');
 
     _gasPriceEstimator = EIP1559GasPriceEstimator(
       _rpc,
@@ -116,23 +109,15 @@ class Web3Service {
     _contractToken = ERC20Contract(
       _chainId!.toInt(),
       _ethClient,
-      tokenAddress,
+      config.token.address,
     );
 
     await _contractToken.init();
 
-    _cardManager = CardManagerContract(
-      _chainId!.toInt(),
-      _ethClient,
-      cardManagerAddress,
-    );
-
-    await _cardManager.init();
-
     _accountFactory = AccountFactoryContract(
       _chainId!.toInt(),
       _ethClient,
-      accountFactoryAddress,
+      config.erc4337.accountFactoryAddress,
     );
 
     await _accountFactory.init();
@@ -142,7 +127,7 @@ class Web3Service {
     _entryPoint = TokenEntryPointContract(
       _chainId!.toInt(),
       _ethClient,
-      entryPointAddress,
+      config.erc4337.entrypointAddress,
     );
 
     await _entryPoint.init();
@@ -158,24 +143,15 @@ class Web3Service {
     _contractProfile = ProfileContract(
       _chainId!.toInt(),
       _ethClient,
-      profileAddress,
+      config.profile.address,
     );
 
     await _contractProfile.init();
   }
 
-  Future<Uint8List> getCardHash(String serial, {bool local = true}) async {
-    return _cardManager.getCardHash(serial, local: local);
-  }
-
-  Future<EthereumAddress> getCardAddress(Uint8List hash) async {
-    return _cardManager.getCardAddress(hash);
-  }
-
   EthereumAddress get account => _account;
   EthereumAddress get tokenAddress => _contractToken.rcontract.address;
   EthereumAddress get entrypointAddress => _entryPoint.rcontract.address;
-  EthereumAddress get cardManagerAddress => _cardManager.rcontract.address;
   String get profileAddress => _contractProfile.addr;
 
   Future<BigInt> getNonce(String addr) async {
@@ -448,26 +424,6 @@ class Web3Service {
       to,
       amount,
     );
-  }
-
-  /// construct withdraw call data
-  Uint8List withdrawCallData(
-    Uint8List hash,
-    BigInt amount,
-  ) {
-    return _cardManager.withdrawCallData(
-      hash,
-      _contractToken.addr,
-      _account.hexEip55,
-      amount,
-    );
-  }
-
-  /// construct withdraw call data
-  Uint8List createCardCallData(
-    Uint8List cardHash,
-  ) {
-    return _cardManager.createAccountCallData(cardHash);
   }
 
   /// given a tx hash, waits for the tx to be mined
