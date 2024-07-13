@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:split_eth_flutter/atoms/seth_text_field.dart';
 import 'package:split_eth_flutter/features/group_list/controller.dart';
 import 'package:split_eth_flutter/atoms/labeled_divider.dart';
 
@@ -16,9 +17,9 @@ class AddGroupView extends StatelessWidget {
     return SimpleDialog(
       contentPadding: const EdgeInsets.all(24),
       children: [
-        const TextField(
-          // TODO style + handle input
-          decoration: InputDecoration(labelText: 'Group ID', border: OutlineInputBorder()),
+        const SethTextField(
+          label: 'Group ID',
+          keyboardType: TextInputType.number,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
