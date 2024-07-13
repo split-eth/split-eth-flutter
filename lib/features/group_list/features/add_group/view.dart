@@ -17,9 +17,11 @@ class AddGroupView extends StatelessWidget {
     return SimpleDialog(
       contentPadding: const EdgeInsets.all(24),
       children: [
-        const SethTextField(
-          label: 'Group ID',
-          keyboardType: TextInputType.number,
+        SethTextField(
+          label: 'Enter Group ID',
+          // NOTE: needed to show "done" button on iOS
+          keyboardType: const TextInputType.numberWithOptions(signed: true),
+          onFieldSubmitted: (String value) => _joinGroup(context, value),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -34,8 +36,12 @@ class AddGroupView extends StatelessWidget {
     );
   }
 
-  static void _createGroup(BuildContext context) {
+  void _createGroup(BuildContext context) {
     final String id = List.generate(6, (_) => Random().nextInt(10)).join();
+    _joinGroup(context, id);
+  }
+
+  void _joinGroup(BuildContext context, String id) {
     final Group group = Group(id: id);
     context.read<GroupListController>().addGroup(group);
     context.go('/groups/$id'); // TODO go to share page?
