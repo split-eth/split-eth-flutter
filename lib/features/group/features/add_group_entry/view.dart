@@ -5,6 +5,7 @@ import 'package:split_eth_flutter/atoms/seth_text_field.dart';
 import 'package:split_eth_flutter/features/group/controller.dart';
 import 'package:split_eth_flutter/models/group_entry.dart';
 import 'package:split_eth_flutter/value_objects/address.dart';
+import 'package:split_eth_flutter/value_objects/group_entry_id.dart';
 
 class AddGroupEntryView extends StatefulWidget {
   const AddGroupEntryView({super.key});
@@ -55,6 +56,7 @@ class _AddGroupEntryViewState extends State<AddGroupEntryView> {
 
   void _addEntry() {
     final GroupEntry groupEntry = GroupEntry(
+      id: GroupEntryId.random(),
       address: Address('TODO'), // TODO
       amount: int.parse(_valueController.text),
       note: _noteController.text,
