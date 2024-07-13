@@ -6,8 +6,8 @@ import 'package:split_eth_flutter/features/group_list/controller.dart';
 
 import '../../../models/group.dart';
 
-class GroupButton extends StatelessWidget {
-  const GroupButton({super.key, required this.group});
+class GroupListItem extends StatelessWidget {
+  const GroupListItem({super.key, required this.group});
 
   final Group group;
 
