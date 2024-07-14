@@ -1,7 +1,6 @@
 import 'package:split_eth_flutter/models/group_entry.dart';
 import 'package:split_eth_flutter/value_objects/group_entry_id.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
-import 'package:split_eth_flutter/vendor/web3/userop.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -44,7 +43,8 @@ class GroupContract {
     final usernames = await getUsernames(entries.map((entry) => entry.address).toList());
 
     return entries.map((entry) {
-      return entry.copyWith(name: usernames[entry.address] ?? 'unknown');
+      final String name = (usernames[entry.address] ?? '').trim();
+      return entry.copyWith(name: name.isNotEmpty ? name : 'unknown');
     }).toList();
   }
 
