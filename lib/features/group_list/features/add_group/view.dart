@@ -5,6 +5,7 @@ import 'package:split_eth_flutter/atoms/seth_text_field.dart';
 import 'package:split_eth_flutter/features/group_list/controller.dart';
 import 'package:split_eth_flutter/atoms/labeled_divider.dart';
 import 'package:split_eth_flutter/value_objects/group_id.dart';
+import 'package:split_eth_flutter/vendor/web3/userop.dart';
 import 'package:web3dart/web3dart.dart';
 
 import '../../../../models/group.dart';
@@ -38,7 +39,7 @@ class AddGroupView extends StatelessWidget {
             final Group group = Group(
               id: GroupId.random(),
               name: 'TODO', // TODO
-              address: EthereumAddress.fromHex('0x0'), // TODO
+              address: EthereumAddress.fromHex(zeroAddress), // TODO
               entries: const [],
             );
             context.read<GroupListController>().addLocalGroup(group);

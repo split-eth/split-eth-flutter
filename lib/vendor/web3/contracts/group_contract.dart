@@ -1,6 +1,7 @@
 import 'package:split_eth_flutter/models/group_entry.dart';
 import 'package:split_eth_flutter/value_objects/group_entry_id.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
+import 'package:split_eth_flutter/vendor/web3/userop.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -31,7 +32,7 @@ class GroupContract {
     return result.map((tuple) {
       return GroupEntry(
         id: GroupEntryId.random(),
-        address: EthereumAddress.fromHex('0x0'), // TODO
+        address: EthereumAddress.fromHex(zeroAddress), // TODO
         amount: 0, // TODO
         note: 'TODO', // TODO
       );
