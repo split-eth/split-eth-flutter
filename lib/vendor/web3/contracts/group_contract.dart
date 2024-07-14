@@ -28,14 +28,16 @@ class GroupContract {
       params: [],
     );
 
-    final entries = result.map((data) {
-      final EthereumAddress address = data[0][0] as EthereumAddress;
+    final data = result[0] as List<dynamic>;
+
+    final List<GroupEntry> entries = data.map((tuple) {
+      final EthereumAddress address = tuple[0] as EthereumAddress;
       return GroupEntry(
         id: GroupEntryId.random(),
         address: address,
         name: 'unknown',
-        amount: data[0][1] as BigInt,
-        note: data[0][2] as String,
+        amount: tuple[1] as BigInt,
+        note: tuple[2] as String,
       );
     }).toList();
 
