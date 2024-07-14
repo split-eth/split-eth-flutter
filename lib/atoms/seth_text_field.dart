@@ -6,12 +6,14 @@ class SethTextField extends StatelessWidget {
     required this.label,
     this.controller,
     this.onFieldSubmitted,
+    this.onChanged,
     this.keyboardType,
   });
 
   final String label;
   final TextEditingController? controller;
   final void Function(String)? onFieldSubmitted;
+  final void Function(String)? onChanged;
   final TextInputType? keyboardType;
 
   @override
@@ -19,6 +21,7 @@ class SethTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       onFieldSubmitted: onFieldSubmitted,
+      onChanged: onChanged,
       keyboardType: keyboardType,
       textAlign: TextAlign.center,
       decoration: InputDecoration(

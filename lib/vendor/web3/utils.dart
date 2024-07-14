@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:math';
 import 'package:archive/archive.dart';
+import 'package:convert/convert.dart';
 import 'package:split_eth_flutter/vendor/web3/utils/uint8.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
@@ -186,4 +187,45 @@ EthereumAddress recoverAddressFromPersonalSignature(Uint8List originalData, Uint
 
 bool isEmptyAddress(String address) {
   return address == emptyAddress;
+}
+
+String solidityPackedKeccak256(List<String> types, List<dynamic> values) {
+  if (types.length != values.length) {
+    throw Exception('Types and values arrays must have the same length');
+  }
+
+  // Encode the parameters in a Solidity-packed format
+  final encodedParams = <int>[];
+  for (var i = 0; i < types.length; i++) {
+    final type = types[i];
+    final value = values[i];
+
+    if (type == 'string') {
+      final stringBytes = utf8.encode(value as String);
+      encodedParams.addAll(stringBytes);
+    } else if (type == 'address') {
+      final addressBytes = hex.decode(value.toString().substring(2).padLeft(40, '0'));
+      encodedParams.addAll(addressBytes);
+    } else {
+      throw Exception('Unsupported type: $type');
+    }
+  }
+
+  // Compute the Keccak-256 hash of the encoded parameters
+  final keccak256Digest = keccak256(Uint8List.fromList(encodedParams));
+  return hex.encode(convertUint8ListToBytes(keccak256Digest));
+}
+
+String hashMessage(String message) {
+  final messageBytes = utf8.encode(message);
+  final keccak256Digest = keccak256(Uint8List.fromList(messageBytes));
+  return hex.encode(convertUint8ListToBytes(keccak256Digest));
+}
+
+Future<String> signHash(EthPrivateKey privateKey, String hash) async {
+  // Convert the hash to bytes
+  final hashBytes = Uint8List.fromList(hex.decode(hash));
+  // Sign the hash
+  final signature = privateKey.signPersonalMessageToUint8List(hashBytes);
+  return hex.encode(signature);
 }

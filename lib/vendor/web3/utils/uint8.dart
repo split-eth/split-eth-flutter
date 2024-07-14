@@ -10,8 +10,7 @@ Uint8List convertStringToBytes32(String str) {
 }
 
 Uint8List convertStringToUint8List(String str, {int? forcePadLength}) {
-  final List<int> codeUnits =
-      (forcePadLength == null ? str : str.padLeft(forcePadLength)).codeUnits;
+  final List<int> codeUnits = (forcePadLength == null ? str : str.padLeft(forcePadLength)).codeUnits;
   return Uint8List.fromList(codeUnits);
 }
 

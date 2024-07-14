@@ -3,6 +3,7 @@ import 'package:split_eth_flutter/features/group/controller.dart';
 import 'package:split_eth_flutter/features/group/features/add_group_entry/view.dart';
 import 'package:split_eth_flutter/features/group/view.dart';
 import 'package:split_eth_flutter/features/group_list/controller.dart';
+import 'package:split_eth_flutter/features/group_list/features/auth/view.dart';
 import 'package:split_eth_flutter/features/group_list/features/joining_group/view.dart';
 import 'package:split_eth_flutter/features/group_list/view.dart';
 import 'package:split_eth_flutter/value_objects/group_id.dart';
@@ -18,6 +19,10 @@ GoRouter createRouterConfig() {
         path: '/groups',
         builder: (context, state) => GroupListController.withView(const GroupListView()),
         routes: [
+          GoRoute(
+            path: 'auth',
+            pageBuilder: (_, __) => DialogPage(builder: (_) => GroupListController.withView(const AuthView())),
+          ),
           GoRoute(
             path: 'new',
             pageBuilder: (_, __) => DialogPage(builder: (_) => GroupListController.withView(const AddGroupView())),

@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 import 'package:split_eth_flutter/vendor/web3/config.dart';
+import 'package:split_eth_flutter/vendor/web3/contracts/session_account.dart';
+import 'package:split_eth_flutter/vendor/web3/contracts/session_account_manager.dart';
 import 'package:split_eth_flutter/vendor/web3/services/api/api.dart';
 import 'package:split_eth_flutter/vendor/web3/services/indexer/signed_request.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/account.dart';
@@ -54,12 +57,12 @@ class Web3Service {
   late APIService _paymasterRPC;
 
   late EthereumAddress _account;
-  late EthPrivateKey _credentials;
+  // late EthPrivateKey _credentials;
 
   late ERC20Contract _contractToken;
-  late AccountFactoryContract _accountFactory;
+  // late AccountFactoryContract _accountFactory;
   late TokenEntryPointContract _entryPoint;
-  late AccountContract _contractAccount;
+  // late AccountContract _contractAccount;
   late ProfileContract _contractProfile;
 
   late EIP1559GasPriceEstimator _gasPriceEstimator;
@@ -88,16 +91,16 @@ class Web3Service {
       throw Exception('Could not get chain id');
     }
 
-    final key = _prefs.key;
-    if (key == null) {
-      final credentials = EthPrivateKey.createRandom(Random.secure());
+    // final key = _prefs.key;
+    // if (key == null) {
+    //   final credentials = EthPrivateKey.createRandom(Random.secure());
 
-      await _prefs.setKey(bytesToHex(credentials.privateKey));
+    //   await _prefs.setKey(bytesToHex(credentials.privateKey));
 
-      _credentials = credentials;
-    } else {
-      _credentials = EthPrivateKey.fromHex(key);
-    }
+    //   _credentials = credentials;
+    // } else {
+    //   _credentials = EthPrivateKey.fromHex(key);
+    // }
 
     _contractToken = ERC20Contract(
       _chainId!.toInt(),
@@ -107,15 +110,15 @@ class Web3Service {
 
     await _contractToken.init();
 
-    _accountFactory = AccountFactoryContract(
-      _chainId!.toInt(),
-      _ethClient,
-      config.erc4337.accountFactoryAddress,
-    );
+    // _accountFactory = AccountFactoryContract(
+    //   _chainId!.toInt(),
+    //   _ethClient,
+    //   config.erc4337.accountFactoryAddress,
+    // );
 
-    await _accountFactory.init();
+    // await _accountFactory.init();
 
-    _account = await _accountFactory.getAddress(_credentials.address.hexEip55);
+    // _account = await _accountFactory.getAddress(_credentials.address.hexEip55);
 
     _entryPoint = TokenEntryPointContract(
       _chainId!.toInt(),
@@ -125,13 +128,13 @@ class Web3Service {
 
     await _entryPoint.init();
 
-    _contractAccount = AccountContract(
-      _chainId!.toInt(),
-      _ethClient,
-      _account.hexEip55,
-    );
+    // _contractAccount = AccountContract(
+    //   _chainId!.toInt(),
+    //   _ethClient,
+    //   _account.hexEip55,
+    // );
 
-    await _contractAccount.init();
+    // await _contractAccount.init();
 
     _contractProfile = ProfileContract(
       _chainId!.toInt(),
@@ -177,169 +180,169 @@ class Web3Service {
   }
 
   /// create an account
-  Future<bool> createAccount({
-    EthPrivateKey? customCredentials,
-  }) async {
-    try {
-      final exists = await accountExists();
-      if (exists) {
-        return true;
-      }
+  // Future<bool> createAccount({
+  //   EthPrivateKey? customCredentials,
+  // }) async {
+  //   try {
+  //     final exists = await accountExists();
+  //     if (exists) {
+  //       return true;
+  //     }
 
-      final calldata = _contractAccount.transferOwnershipCallData(
-        _credentials.address.hexEip55,
-      );
+  //     final calldata = _contractAccount.transferOwnershipCallData(
+  //       _credentials.address.hexEip55,
+  //     );
 
-      final (_, userop) = await prepareUserop(
-        [_account.hexEip55],
-        [calldata],
-      );
+  //     final (_, userop) = await prepareUserop(
+  //       [_account.hexEip55],
+  //       [calldata],
+  //     );
 
-      final txHash = await submitUserop(
-        userop,
-      );
-      if (txHash == null) {
-        throw Exception('failed to submit user op');
-      }
+  //     final txHash = await submitUserop(
+  //       userop,
+  //     );
+  //     if (txHash == null) {
+  //       throw Exception('failed to submit user op');
+  //     }
 
-      final success = await waitForTxSuccess(txHash);
-      if (!success) {
-        throw Exception('transaction failed');
-      }
+  //     final success = await waitForTxSuccess(txHash);
+  //     if (!success) {
+  //       throw Exception('transaction failed');
+  //     }
 
-      return true;
-    } catch (_) {}
+  //     return true;
+  //   } catch (_) {}
 
-    return false;
-  }
+  //   return false;
+  // }
 
   /// set profile data
-  Future<String?> setProfile(
-    ProfileRequest profile, {
-    required List<int> image,
-    required String fileType,
-  }) async {
-    try {
-      final url = '/profiles/v2/$profileAddress/${_account.hexEip55}';
+  // Future<String?> setProfile(
+  //   ProfileRequest profile, {
+  //   required List<int> image,
+  //   required String fileType,
+  // }) async {
+  //   try {
+  //     final url = '/profiles/v2/$profileAddress/${_account.hexEip55}';
 
-      final json = jsonEncode(
-        profile.toJson(),
-      );
+  //     final json = jsonEncode(
+  //       profile.toJson(),
+  //     );
 
-      final body = SignedRequest(convertBytesToUint8List(utf8.encode(json)));
+  //     final body = SignedRequest(convertBytesToUint8List(utf8.encode(json)));
 
-      final sig = await compute(generateSignature, (jsonEncode(body.toJson()), _credentials));
+  //     final sig = await compute(generateSignature, (jsonEncode(body.toJson()), _credentials));
 
-      final resp = await _indexerIPFS.filePut(
-        url: url,
-        file: image,
-        fileType: fileType,
-        headers: {
-          'Authorization': 'Bearer $_indexerKey',
-          'X-Signature': sig,
-          'X-Address': _account.hexEip55,
-        },
-        body: body.toJson(),
-      );
+  //     final resp = await _indexerIPFS.filePut(
+  //       url: url,
+  //       file: image,
+  //       fileType: fileType,
+  //       headers: {
+  //         'Authorization': 'Bearer $_indexerKey',
+  //         'X-Signature': sig,
+  //         'X-Address': _account.hexEip55,
+  //       },
+  //       body: body.toJson(),
+  //     );
 
-      final String profileUrl = resp['object']['ipfs_url'];
+  //     final String profileUrl = resp['object']['ipfs_url'];
 
-      final calldata = _contractProfile.setCallData(_account.hexEip55, profile.username, profileUrl);
+  //     final calldata = _contractProfile.setCallData(_account.hexEip55, profile.username, profileUrl);
 
-      final (_, userop) = await prepareUserop([profileAddress], [calldata]);
+  //     final (_, userop) = await prepareUserop([profileAddress], [calldata]);
 
-      final txHash = await submitUserop(userop);
-      if (txHash == null) {
-        throw Exception('profile update failed');
-      }
+  //     final txHash = await submitUserop(userop);
+  //     if (txHash == null) {
+  //       throw Exception('profile update failed');
+  //     }
 
-      final success = await waitForTxSuccess(txHash);
-      if (!success) {
-        throw Exception('transaction failed');
-      }
+  //     final success = await waitForTxSuccess(txHash);
+  //     if (!success) {
+  //       throw Exception('transaction failed');
+  //     }
 
-      return profileUrl;
-    } catch (_) {}
+  //     return profileUrl;
+  //   } catch (_) {}
 
-    return null;
-  }
+  //   return null;
+  // }
 
   /// update profile data
-  Future<String?> updateProfile(ProfileV1 profile) async {
-    try {
-      final url = '/profiles/v2/$profileAddress/${_account.hexEip55}';
+  // Future<String?> updateProfile(ProfileV1 profile) async {
+  //   try {
+  //     final url = '/profiles/v2/$profileAddress/${_account.hexEip55}';
 
-      final json = jsonEncode(
-        profile.toJson(),
-      );
+  //     final json = jsonEncode(
+  //       profile.toJson(),
+  //     );
 
-      final body = SignedRequest(convertBytesToUint8List(utf8.encode(json)));
+  //     final body = SignedRequest(convertBytesToUint8List(utf8.encode(json)));
 
-      final sig = await compute(generateSignature, (jsonEncode(body.toJson()), _credentials));
+  //     final sig = await compute(generateSignature, (jsonEncode(body.toJson()), _credentials));
 
-      final resp = await _indexerIPFS.patch(
-        url: url,
-        headers: {
-          'Authorization': 'Bearer $_indexerKey',
-          'X-Signature': sig,
-          'X-Address': _account.hexEip55,
-        },
-        body: body.toJson(),
-      );
+  //     final resp = await _indexerIPFS.patch(
+  //       url: url,
+  //       headers: {
+  //         'Authorization': 'Bearer $_indexerKey',
+  //         'X-Signature': sig,
+  //         'X-Address': _account.hexEip55,
+  //       },
+  //       body: body.toJson(),
+  //     );
 
-      final String profileUrl = resp['object']['ipfs_url'];
+  //     final String profileUrl = resp['object']['ipfs_url'];
 
-      final calldata = _contractProfile.setCallData(_account.hexEip55, profile.username, profileUrl);
+  //     final calldata = _contractProfile.setCallData(_account.hexEip55, profile.username, profileUrl);
 
-      final (_, userop) = await prepareUserop([profileAddress], [calldata]);
+  //     final (_, userop) = await prepareUserop([profileAddress], [calldata]);
 
-      final txHash = await submitUserop(userop);
-      if (txHash == null) {
-        throw Exception('profile update failed');
-      }
+  //     final txHash = await submitUserop(userop);
+  //     if (txHash == null) {
+  //       throw Exception('profile update failed');
+  //     }
 
-      final success = await waitForTxSuccess(txHash);
-      if (!success) {
-        throw Exception('transaction failed');
-      }
+  //     final success = await waitForTxSuccess(txHash);
+  //     if (!success) {
+  //       throw Exception('transaction failed');
+  //     }
 
-      return profileUrl;
-    } catch (_) {}
+  //     return profileUrl;
+  //   } catch (_) {}
 
-    return null;
-  }
+  //   return null;
+  // }
 
   /// set profile data
-  Future<bool> unpinCurrentProfile() async {
-    try {
-      final url = '/profiles/v2/$profileAddress/${_account.hexEip55}';
+  // Future<bool> unpinCurrentProfile() async {
+  //   try {
+  //     final url = '/profiles/v2/$profileAddress/${_account.hexEip55}';
 
-      final encoded = jsonEncode(
-        {
-          'account': _account.hexEip55,
-          'date': DateTime.now().toUtc().toIso8601String(),
-        },
-      );
+  //     final encoded = jsonEncode(
+  //       {
+  //         'account': _account.hexEip55,
+  //         'date': DateTime.now().toUtc().toIso8601String(),
+  //       },
+  //     );
 
-      final body = SignedRequest(convertStringToUint8List(encoded));
+  //     final body = SignedRequest(convertStringToUint8List(encoded));
 
-      final sig = await compute(generateSignature, (jsonEncode(body.toJson()), _credentials));
+  //     final sig = await compute(generateSignature, (jsonEncode(body.toJson()), _credentials));
 
-      await _indexerIPFS.delete(
-        url: url,
-        headers: {
-          'Authorization': 'Bearer $_indexerKey',
-          'X-Signature': sig,
-          'X-Address': _account.hexEip55,
-        },
-        body: body.toJson(),
-      );
+  //     await _indexerIPFS.delete(
+  //       url: url,
+  //       headers: {
+  //         'Authorization': 'Bearer $_indexerKey',
+  //         'X-Signature': sig,
+  //         'X-Address': _account.hexEip55,
+  //       },
+  //       body: body.toJson(),
+  //     );
 
-      return true;
-    } catch (_) {}
+  //     return true;
+  //   } catch (_) {}
 
-    return false;
-  }
+  //   return false;
+  // }
 
   /// get profile data
   Future<ProfileV1?> getProfile(String addr) async {
@@ -551,9 +554,10 @@ class Web3Service {
   }
 
   /// prepare a userop for with calldata
-  Future<(String, UserOp)> prepareUserop(List<String> dest, List<Uint8List> calldata) async {
+  Future<(String, UserOp)> prepareUserop(EthPrivateKey credentials, EthereumAddress sender, String salt,
+      List<String> dest, List<Uint8List> calldata) async {
     try {
-      EthereumAddress acc = await _accountFactory.getAddress(_credentials.address.hexEip55);
+      EthereumAddress acc = sender;
 
       // instantiate user op with default values
       final userop = UserOp.defaultUserOp();
@@ -567,20 +571,19 @@ class Web3Service {
       // if it's the first user op from this account, we need to deploy the account contract
       if (userop.nonce == BigInt.zero) {
         // construct the init code to deploy the account
-        userop.initCode = await _accountFactory.createAccountInitCode(
-          _credentials.address.hexEip55,
-          BigInt.zero,
-        );
+        userop.initCode = await GetIt.I.get<SessionAccountManagerContract>().createAccountInitCode(salt);
       }
 
       // set the appropriate call data for the transfer
       // we need to call account.execute which will call token.transfer
+      final accountContract = await SessionAccountContract.init(sender.hexEip55, _ethClient);
+
       userop.callData = dest.length > 1 && calldata.length > 1
-          ? _contractAccount.executeBatchCallData(
+          ? accountContract.executeBatchCallData(
               dest,
               calldata,
             )
-          : _contractAccount.executeCallData(
+          : accountContract.executeCallData(
               dest[0],
               BigInt.zero,
               calldata[0],
@@ -644,7 +647,7 @@ class Web3Service {
       final hash = await _entryPoint.getUserOpHash(userop);
 
       // now we can sign the user op
-      userop.generateSignature(_credentials, hash);
+      userop.generateSignature(credentials, hash);
 
       return (bytesToHex(hash, include0x: true), userop);
     } catch (_) {
