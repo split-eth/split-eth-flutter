@@ -10,8 +10,21 @@ class GroupSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final balances = context.select((GroupController c) => c.group.balances);
     return ListView.builder(
-      itemCount: balances.length,
-      itemBuilder: (context, index) => GroupBalanceItem(balance: balances[index]),
+      itemCount: balances.length + 1,
+      itemBuilder: (context, index) {
+        if (index == balances.length) {
+          return Center(
+            child: ElevatedButton(
+              onPressed: () {
+                // TODO
+              },
+              child: const Text('Split'),
+            ),
+          );
+        }
+
+        return GroupBalanceItem(balance: balances[index]);
+      },
     );
   }
 }
