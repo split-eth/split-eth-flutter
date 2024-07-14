@@ -14,6 +14,13 @@ class GroupController extends ChangeNotifier {
 
   Group get group => GetIt.I<LocalGroupRepo>().getGroupById(_groupId);
 
+  Future<void> refreshGroup() async {
+    // TODO
+    // Group group = await getRemoteGroup(groupId);
+    // GetIt.I.get<LocalGroupRepo>().updateGroup(group);
+    notifyListeners();
+  }
+
   void addEntry(GroupEntry entry) {
     final newGroup = group.copyWith(entries: [...group.entries, entry]);
     GetIt.I<LocalGroupRepo>().updateGroup(newGroup);
