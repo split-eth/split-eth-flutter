@@ -25,11 +25,19 @@ class GroupListController extends ChangeNotifier {
     );
 
     final GroupContract groupContract = await GroupContract.init(groupAddress);
-    final String name = await groupContract.getName();
-    // TODO value not in range: 32 seems to be the error when the contract does not exists
 
-    // TODO read name of group
-    throw UnimplementedError();
+    late final String name;
+    try {
+      name = await groupContract.getName();
+    } on RangeError {
+      throw Exception('Group does not exist');
+    }
+    
+    return Group(
+      // TODO add name and address
+      id: groupId,
+      entries: const [], // TODO
+    );
   }
 
   void addLocalGroup(Group group) {
