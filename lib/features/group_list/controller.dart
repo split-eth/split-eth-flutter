@@ -42,8 +42,9 @@ class GroupListController extends ChangeNotifier {
     }
 
     return Group(
-      // TODO add name and address
       id: groupId,
+      name: name,
+      address: groupAddress,
       entries: const [], // TODO
     );
   }
