@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:split_eth_flutter/vendor/web3/service.dart';
 import 'package:split_eth_flutter/vendor/web3/utils/uint8.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -13,18 +14,10 @@ class GroupFactoryContract {
     EthereumAddress token,
     String salt,
   ) async {
-    final function = _contract.function('getAddress');
-
-    _client.call(
-      contract: _contract,
-      function: _contract.function('getAddress'),
-      params: [token, convertStringToUint8List(salt)],
-    );
-
     final result = await _client.call(
       contract: _contract,
-      function: function,
-      params: [token, convertStringToUint8List(salt)],
+      function: _contract.function('getAddress'),
+      params: [token, convertStringToBytes32(salt)],
     );
 
     return result[0] as EthereumAddress;
@@ -41,10 +34,10 @@ class GroupFactoryContract {
     return function.encodeCall([owner, token, convertStringToUint8List(salt), name]);
   }
 
-  static Future<GroupFactoryContract> init(String contractAddress, Web3Client client) async {
+  static Future<GroupFactoryContract> init(String contractAddress) async {
     final json = await rootBundle.loadString('lib/assets/group_factory.abi.json');
     final abi = ContractAbi.fromJson(json, 'GroupFactory');
     final contract = DeployedContract(abi, EthereumAddress.fromHex(contractAddress));
-    return GroupFactoryContract._(contract, client);
+    return GroupFactoryContract._(contract, Web3Service().ethClient);
   }
 }

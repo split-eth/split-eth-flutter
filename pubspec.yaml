@@ -24,7 +24,6 @@ dependencies:
     git:
       url: https://github.com/citizenwallet/smartcontracts.git
       ref: v0.0.106
-  convert: ^3.1.1
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +38,7 @@ flutter:
     # assets that our app loads
     - lib/assets/config.json
     - lib/assets/group_factory.abi.json
+    - lib/assets/group.abi.json
     - lib/assets/session_account_manager.abi.json
     - lib/assets/session_account.abi.json
     # junk to make Kevin's code compile, probably not used

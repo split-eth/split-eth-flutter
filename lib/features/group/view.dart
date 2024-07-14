@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:split_eth_flutter/features/group/controller.dart';
 import 'package:split_eth_flutter/features/group/widgets/group_entry_item.dart';
+import 'package:split_eth_flutter/features/group/widgets/refresh_action.dart';
 
 class GroupView extends StatelessWidget {
   const GroupView({super.key});
@@ -10,11 +11,15 @@ class GroupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final id = context.select((GroupController c) => c.group.id);
+    final name = context.select((GroupController c) => c.group.name);
     final entries = context.select((GroupController c) => c.group.entries);
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('Group $id'),
+        title: Text('Group: $name'),
+        actions: const [
+          RefreshAction(),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.go('/groups/$id/add_entry'),

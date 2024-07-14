@@ -7,6 +7,10 @@ import 'package:split_eth_flutter/vendor/web3/utils/uint8.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 
+String addressToShortString(EthereumAddress address) {
+  return address.hex.substring(0, 6);
+}
+
 EtherAmount toEtherAmount(BigInt amount, {int decimals = 6}) {
   EtherUnit unit = switch (decimals) {
     0 => EtherUnit.wei,

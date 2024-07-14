@@ -5,6 +5,8 @@ import 'package:split_eth_flutter/atoms/seth_text_field.dart';
 import 'package:split_eth_flutter/features/group_list/controller.dart';
 import 'package:split_eth_flutter/atoms/labeled_divider.dart';
 import 'package:split_eth_flutter/value_objects/group_id.dart';
+import 'package:split_eth_flutter/vendor/web3/userop.dart';
+import 'package:web3dart/web3dart.dart';
 
 import '../../../../models/group.dart';
 
@@ -20,7 +22,10 @@ class AddGroupView extends StatelessWidget {
           label: 'Enter Group ID',
           // NOTE: needed to show "done" button on iOS
           keyboardType: const TextInputType.numberWithOptions(signed: true),
-          onFieldSubmitted: (String value) => _joinGroup(context, GroupId(value)),
+          onFieldSubmitted: (String value) {
+            context.pop();
+            context.go('/groups/joining?id=$value');
+          },
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -29,15 +34,19 @@ class AddGroupView extends StatelessWidget {
         ElevatedButton.icon(
           icon: const Icon(Icons.add),
           label: const Text('Create Group'),
-          onPressed: () => _joinGroup(context, GroupId.random()),
+          onPressed: () async {
+            // TODO deploy group contract
+            final Group group = Group(
+              id: GroupId.random(),
+              name: 'TODO', // TODO
+              address: EthereumAddress.fromHex(zeroAddress), // TODO
+              entries: const [],
+            );
+            context.read<GroupListController>().addLocalGroup(group);
+            context.pop();
+          },
         ),
       ],
     );
-  }
-
-  void _joinGroup(BuildContext context, GroupId id) {
-    final Group group = Group(id: id, entries: const []);
-    context.read<GroupListController>().addGroup(group);
-    context.go('/groups/$id'); // TODO go to share page?
   }
 }

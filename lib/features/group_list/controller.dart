@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:split_eth_flutter/repos/local_group_repo.dart';
+import 'package:split_eth_flutter/repos/remote_group_repo.dart';
 import 'package:split_eth_flutter/repos/session_repo.dart';
+import 'package:split_eth_flutter/value_objects/group_id.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/session_account.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/session_account_manager.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
 import 'package:split_eth_flutter/vendor/web3/services/auth/auth.dart';
-import 'package:split_eth_flutter/vendor/web3/utils.dart';
 import 'package:split_eth_flutter/vendor/web3/utils/uint8.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
@@ -18,6 +19,8 @@ import '../../models/group.dart';
 
 class GroupListController extends ChangeNotifier {
   GroupListController._();
+
+  final RemoteGroupRepo _remoteGroupRepo = GetIt.I.get<RemoteGroupRepo>();
 
   SessionAccountContract? sessionAccountContract;
 
@@ -211,12 +214,20 @@ class GroupListController extends ChangeNotifier {
 
   List<Group> get groups => GetIt.I.get<LocalGroupRepo>().getGroups();
 
-  void addGroup(Group group) {
+  Future<void> joinGroup(GroupId groupId) async {
+    if (GetIt.I.get<LocalGroupRepo>().hasGroup(groupId)) {
+      throw Exception('You are already in this group');
+    }
+    Group group = await _remoteGroupRepo.getRemoteGroup(groupId);
+    addLocalGroup(group);
+  }
+
+  void addLocalGroup(Group group) {
     GetIt.I.get<LocalGroupRepo>().addGroup(group);
     notifyListeners();
   }
 
-  void removeGroup(Group group) {
+  void removeLocalGroup(Group group) {
     GetIt.I.get<LocalGroupRepo>().removeGroup(group);
     notifyListeners();
   }
