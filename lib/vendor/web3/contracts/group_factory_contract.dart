@@ -17,7 +17,7 @@ class GroupFactoryContract {
     final result = await _client.call(
       contract: _contract,
       function: _contract.function('getAddress'),
-      params: [token, convertStringToUint8List(salt, forcePadLength: 32)],
+      params: [token, convertStringToBytes32(salt)],
     );
 
     return result[0] as EthereumAddress;

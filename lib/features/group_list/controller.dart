@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:split_eth_flutter/repos/local_group_repo.dart';
 import 'package:split_eth_flutter/value_objects/group_id.dart';
 import 'package:split_eth_flutter/vendor/web3/config.dart';
+import 'package:split_eth_flutter/vendor/web3/contracts/group_contract.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/group_factory_contract.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -13,15 +14,20 @@ class GroupListController extends ChangeNotifier {
   GroupListController._();
 
   final Config _config = GetIt.I.get<Config>();
-  final GroupFactoryContract _groupFactory = GetIt.I.get<GroupFactoryContract>();
+  final GroupFactoryContract _groupFactoryContract = GetIt.I.get<GroupFactoryContract>();
 
   List<Group> get groups => GetIt.I.get<LocalGroupRepo>().getGroups();
 
   Future<Group> getRemoteGroup(GroupId groupId) async {
-    EthereumAddress groupAddress = await _groupFactory.getAddress(
+    EthereumAddress groupAddress = await _groupFactoryContract.getAddress(
       EthereumAddress.fromHex(_config.token.address),
       groupId.toString(),
     );
+
+    final GroupContract groupContract = await GroupContract.init(groupAddress);
+    final String name = await groupContract.getName();
+    // TODO value not in range: 32 seems to be the error when the contract does not exists
+
     // TODO read name of group
     throw UnimplementedError();
   }

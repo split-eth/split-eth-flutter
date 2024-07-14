@@ -8,7 +8,15 @@ class GroupContract {
   final DeployedContract _contract;
   final Web3Client _client;
 
-  // TODO implement methods
+  Future<String> getName() async {
+    final result = await _client.call(
+      contract: _contract,
+      function: _contract.function('name'),
+      params: [],
+    );
+
+    return result[0] as String;
+  }
 
   static Future<GroupContract> init(EthereumAddress contractAddress) async {
     final json = await rootBundle.loadString('lib/assets/group.abi.json');
