@@ -21,7 +21,10 @@ GoRouter createRouterConfig() {
         routes: [
           GoRoute(
             path: 'auth',
-            pageBuilder: (_, __) => DialogPage(builder: (_) => GroupListController.withView(const AuthView())),
+            pageBuilder: (_, __) => DialogPage(
+              // barrierDismissible: false, // TODO enable
+              builder: (_) => GroupListController.withView(const AuthView()),
+            ),
           ),
           GoRoute(
             path: 'new',
