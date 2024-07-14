@@ -38,7 +38,7 @@ class GroupEntryItem extends StatelessWidget {
             TextSpan(
               children: [
                 TextSpan(
-                  text: groupEntry.amount.toString(),
+                  text: groupEntry.formattedAmount,
                   style: const TextStyle(fontSize: 20),
                 ),
                 TextSpan(

@@ -14,6 +14,10 @@ Group _$GroupFromJson(Map<String, dynamic> json) => Group(
       entries: (json['entries'] as List<dynamic>)
           .map((e) => GroupEntry.fromJson(e as Map<String, dynamic>))
           .toList(),
+      balances: (json['balances'] as List<dynamic>)
+          .map((e) => GroupBalance.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      isFunded: json['isFunded'] as bool,
     );
 
 Map<String, dynamic> _$GroupToJson(Group instance) => <String, dynamic>{
@@ -21,4 +25,6 @@ Map<String, dynamic> _$GroupToJson(Group instance) => <String, dynamic>{
       'name': instance.name,
       'address': const EthereumAddressConverter().toJson(instance.address),
       'entries': instance.entries,
+      'balances': instance.balances,
+      'isFunded': instance.isFunded,
     };

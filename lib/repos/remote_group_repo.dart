@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:split_eth_flutter/models/group.dart';
+import 'package:split_eth_flutter/models/group_balance.dart';
 import 'package:split_eth_flutter/models/group_entry.dart';
 import 'package:split_eth_flutter/value_objects/group_id.dart';
 import 'package:split_eth_flutter/vendor/web3/config.dart';
@@ -27,12 +28,16 @@ class RemoteGroupRepo {
     }
 
     final List<GroupEntry> entries = await groupContract.getExpenses();
+    final List<GroupBalance> balances = await groupContract.getBalances();
+    final bool isFunded = await groupContract.isFunded();
 
     return Group(
       id: groupId,
       name: name,
       address: groupAddress,
       entries: entries,
+      balances: balances,
+      isFunded: isFunded,
     );
   }
 }
