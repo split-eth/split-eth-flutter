@@ -1,3 +1,5 @@
+import 'package:split_eth_flutter/models/group_entry.dart';
+import 'package:split_eth_flutter/value_objects/group_entry_id.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -16,6 +18,24 @@ class GroupContract {
     );
 
     return result[0] as String;
+  }
+
+  Future<List<GroupEntry>> getExpenses() async {
+    final result = await _client.call(
+      contract: _contract,
+      function: _contract.function('getExpenses'),
+      params: [],
+    );
+
+    // TODO
+    return result.map((tuple) {
+      return GroupEntry(
+        id: GroupEntryId.random(),
+        address: EthereumAddress.fromHex('0x0'), // TODO
+        amount: 0, // TODO
+        note: 'TODO', // TODO
+      );
+    }).toList();
   }
 
   static Future<GroupContract> init(EthereumAddress contractAddress) async {

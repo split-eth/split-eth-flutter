@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:split_eth_flutter/models/group_entry.dart';
 import 'package:split_eth_flutter/repos/local_group_repo.dart';
 import 'package:split_eth_flutter/value_objects/group_id.dart';
 import 'package:split_eth_flutter/vendor/web3/config.dart';
@@ -41,11 +42,13 @@ class GroupListController extends ChangeNotifier {
       throw Exception('Group does not exist');
     }
 
+    final List<GroupEntry> entries = await groupContract.getExpenses();
+
     return Group(
       id: groupId,
       name: name,
       address: groupAddress,
-      entries: const [], // TODO
+      entries: entries,
     );
   }
 
