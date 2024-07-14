@@ -11,6 +11,7 @@ import 'package:split_eth_flutter/vendor/web3/contracts/session_account.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/session_account_manager.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
 import 'package:split_eth_flutter/vendor/web3/services/auth/auth.dart';
+import 'package:split_eth_flutter/vendor/web3/utils/uint8.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 
