@@ -33,7 +33,7 @@ void main() async {
   await GetIt.I.get<Web3Service>().init(config);
 
   // smart contracts
-  GetIt.I.registerSingletonAsync(() async => GroupFactoryContract.init("0x50665e1d7A94891034506C2D51b409945a37C5E4"));
+  GetIt.I.registerSingletonAsync(() async => GroupFactoryContract.init("0x616F422Cf3a9d2b7330Bb833b5C14Da685da8AC1"));
   GetIt.I.registerSingletonAsync(
     () async => SessionAccountManagerContract.init(
         "0x7349b4b271d3592a4a95cc3Bb0063F7B6dd1fe35",
