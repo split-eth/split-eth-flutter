@@ -10,11 +10,12 @@ class GroupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final id = context.select((GroupController c) => c.group.id);
+    final name = context.select((GroupController c) => c.group.name);
     final entries = context.select((GroupController c) => c.group.entries);
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('Group $id'),
+        title: Text('Group: $name'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.go('/groups/$id/add_entry'),

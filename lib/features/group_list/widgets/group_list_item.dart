@@ -28,7 +28,7 @@ class GroupListItem extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        title: Text('Group ${group.id}'),
+        title: Text('Group: ${group.name}'),
         onTap: () => context.go('/groups/${group.id}'),
       ),
     );
