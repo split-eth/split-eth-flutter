@@ -3,10 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:split_eth_flutter/atoms/seth_text_field.dart';
 import 'package:split_eth_flutter/features/group_list/controller.dart';
-import 'package:split_eth_flutter/atoms/labeled_divider.dart';
-import 'package:split_eth_flutter/value_objects/group_id.dart';
-
-import '../../../../models/group.dart';
 
 class AuthView extends StatelessWidget {
   const AuthView({super.key});

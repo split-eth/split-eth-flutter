@@ -10,6 +10,7 @@ import 'package:split_eth_flutter/value_objects/group_entry_id.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/group_contract.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/session_account_manager.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
+import 'package:split_eth_flutter/vendor/web3/services/auth/auth.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -25,6 +26,12 @@ class GroupController extends ChangeNotifier {
 
   EthPrivateKey? credentials;
   EthereumAddress? account;
+
+  Future<void> split() async {
+    final request = SplitRequest(group: group.address.toString());
+    await GetIt.I.get<AuthService>().split(request);
+    await refreshGroup();
+  }
 
   Future<void> loadAccount() async {
     try {

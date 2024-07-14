@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:split_eth_flutter/features/group/controller.dart';
 import 'package:split_eth_flutter/features/group/widgets/group_balance_item.dart';
@@ -28,8 +29,30 @@ class GroupSummary extends StatelessWidget {
     );
   }
 
-  void _handleSplit(BuildContext context) {
-    // TODO
-    print('split');
+  void _handleSplit(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      await context.read<GroupController>().split();
+    } catch (e) {
+      if (context.mounted) {
+        await showDialog(
+          context: context,
+          builder: (_) => Center(
+            child: Text(
+              e.toString(),
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+    }
   }
 }
