@@ -79,7 +79,7 @@ class GroupContract {
       return GroupBalance(
         address: address,
         name: usernames[address] ?? 'unknown',
-        balance: balances[index],
+        amount: balances[index],
       );
     }).toList();
   }
