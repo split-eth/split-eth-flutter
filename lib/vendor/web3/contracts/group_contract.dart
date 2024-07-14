@@ -84,6 +84,16 @@ class GroupContract {
     }).toList();
   }
 
+  Future<bool> isFunded() async {
+    final result = await _client.call(
+      contract: _contract,
+      function: _contract.function('isFunded'),
+      params: [],
+    );
+
+    return result[0] as bool;
+  }
+
   static Future<GroupContract> init(EthereumAddress contractAddress) async {
     final json = await rootBundle.loadString('lib/assets/group.abi.json');
     final abi = ContractAbi.fromJson(json, 'Group');

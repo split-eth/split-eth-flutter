@@ -29,6 +29,7 @@ class RemoteGroupRepo {
 
     final List<GroupEntry> entries = await groupContract.getExpenses();
     final List<GroupBalance> balances = await groupContract.getBalances();
+    final bool isFunded = await groupContract.isFunded();
 
     return Group(
       id: groupId,
@@ -36,6 +37,7 @@ class RemoteGroupRepo {
       address: groupAddress,
       entries: entries,
       balances: balances,
+      isFunded: isFunded,
     );
   }
 }

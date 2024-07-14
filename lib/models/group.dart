@@ -19,6 +19,7 @@ class Group extends Equatable {
     required this.address,
     required this.entries,
     required this.balances,
+    required this.isFunded,
   });
 
   final GroupId id;
@@ -26,6 +27,7 @@ class Group extends Equatable {
   final EthereumAddress address;
   final List<GroupEntry> entries;
   final List<GroupBalance> balances;
+  final bool isFunded;
 
   @override
   List<Object> get props => [id];
@@ -36,6 +38,7 @@ class Group extends Equatable {
     EthereumAddress? address,
     List<GroupEntry>? entries,
     List<GroupBalance>? balances,
+    bool? isFunded,
   }) {
     return Group(
       id: id ?? this.id,
@@ -43,6 +46,7 @@ class Group extends Equatable {
       address: address ?? this.address,
       entries: entries ?? this.entries,
       balances: balances ?? this.balances,
+      isFunded: isFunded ?? this.isFunded,
     );
   }
 

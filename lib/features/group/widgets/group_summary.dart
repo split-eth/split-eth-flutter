@@ -8,16 +8,16 @@ class GroupSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isFunded = context.select((GroupController c) => c.group.isFunded);
     final balances = context.select((GroupController c) => c.group.balances);
+
     return ListView.builder(
       itemCount: balances.length + 1,
       itemBuilder: (context, index) {
         if (index == balances.length) {
           return Center(
             child: ElevatedButton(
-              onPressed: () {
-                // TODO
-              },
+              onPressed: isFunded ? () => _handleSplit(context) : null,
               child: const Text('Split'),
             ),
           );
@@ -26,5 +26,10 @@ class GroupSummary extends StatelessWidget {
         return GroupBalanceItem(balance: balances[index]);
       },
     );
+  }
+
+  void _handleSplit(BuildContext context) {
+    // TODO
+    print('split');
   }
 }

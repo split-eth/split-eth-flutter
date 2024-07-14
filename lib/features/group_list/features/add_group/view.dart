@@ -42,6 +42,7 @@ class AddGroupView extends StatelessWidget {
               address: EthereumAddress.fromHex(zeroAddress), // TODO
               entries: const [],
               balances: const [],
+              isFunded: false,
             );
             context.read<GroupListController>().addLocalGroup(group);
             context.pop();
