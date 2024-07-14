@@ -33,6 +33,7 @@ class RemoteGroupRepo {
       name: name,
       address: groupAddress,
       entries: entries,
+      balances: const [], // TODO
     );
   }
 }

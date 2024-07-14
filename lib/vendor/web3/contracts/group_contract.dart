@@ -1,3 +1,4 @@
+import 'package:split_eth_flutter/models/group_balance.dart';
 import 'package:split_eth_flutter/models/group_entry.dart';
 import 'package:split_eth_flutter/value_objects/group_entry_id.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
@@ -60,6 +61,17 @@ class GroupContract {
     );
 
     return result[0] as String;
+  }
+
+  Future<List<GroupBalance>> getSummary() async {
+    final result = await _client.call(
+      contract: _contract,
+      function: _contract.function('getSummaryList'),
+      params: [],
+    );
+
+    // TODO
+    throw UnimplementedError();
   }
 
   static Future<GroupContract> init(EthereumAddress contractAddress) async {
