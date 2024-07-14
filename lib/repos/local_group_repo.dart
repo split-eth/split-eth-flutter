@@ -41,6 +41,10 @@ class LocalGroupRepo {
         .toList();
   }
 
+  bool hasGroup(GroupId groupId) {
+    return _prefs.containsKey('$namespace/$groupId');
+  }
+
   Group getGroupById(GroupId groupId) {
     return _getGroupByKey('$namespace/$groupId');
   }

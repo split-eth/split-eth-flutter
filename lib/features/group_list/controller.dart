@@ -18,6 +18,14 @@ class GroupListController extends ChangeNotifier {
 
   List<Group> get groups => GetIt.I.get<LocalGroupRepo>().getGroups();
 
+  Future<void> joinGroup(GroupId groupId) async {
+    if (GetIt.I.get<LocalGroupRepo>().hasGroup(groupId)) {
+      throw Exception('You are already in this group');
+    }
+    Group group = await getRemoteGroup(groupId);
+    addLocalGroup(group);
+  }
+
   Future<Group> getRemoteGroup(GroupId groupId) async {
     EthereumAddress groupAddress = await _groupFactoryContract.getAddress(
       EthereumAddress.fromHex(_config.token.address),
@@ -32,7 +40,7 @@ class GroupListController extends ChangeNotifier {
     } on RangeError {
       throw Exception('Group does not exist');
     }
-    
+
     return Group(
       // TODO add name and address
       id: groupId,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:split_eth_flutter/features/group_list/controller.dart';
-import 'package:split_eth_flutter/models/group.dart';
 import 'package:split_eth_flutter/value_objects/group_id.dart';
 
 class JoiningGroupView extends StatefulWidget {
@@ -18,12 +17,12 @@ class JoiningGroupView extends StatefulWidget {
 }
 
 class _JoiningGroupViewState extends State<JoiningGroupView> {
-  late final Future<Group> _group;
+  late final Future<void> _future;
 
   @override
   void initState() {
     super.initState();
-    _group = context.read<GroupListController>().getRemoteGroup(widget.groupId);
+    _future = context.read<GroupListController>().joinGroup(widget.groupId);
   }
 
   static const double _minHeight = 48;
@@ -36,7 +35,7 @@ class _JoiningGroupViewState extends State<JoiningGroupView> {
         ConstrainedBox(
           constraints: const BoxConstraints(minHeight: _minHeight),
           child: FutureBuilder(
-            future: _group,
+            future: _future,
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
                 return const Center(child: CircularProgressIndicator());
@@ -48,6 +47,7 @@ class _JoiningGroupViewState extends State<JoiningGroupView> {
                   children: [
                     Text(
                       snapshot.error.toString(),
+                      textAlign: TextAlign.center,
                       style: const TextStyle(color: Colors.red),
                     ),
                     const SizedBox(height: 16),
@@ -62,7 +62,10 @@ class _JoiningGroupViewState extends State<JoiningGroupView> {
                 );
               }
 
-              // TODO schedule navigate to group
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.go('/groups/${widget.groupId}');
+              });
+
               return const Center(
                 child: Icon(
                   Icons.check_circle,
