@@ -45,8 +45,10 @@ class GroupListController extends ChangeNotifier {
 
       final sContract = await SessionAccountContract.init(address.hexEip55, GetIt.I.get<Web3Service>().ethClient);
 
-      final owner = await sContract.getOwner();
-      if (owner.hexEip55 != address.hexEip55) {
+      final credentials = EthPrivateKey(hexToBytes(key!));
+
+      final hasSession = await sContract.hasValidSession(credentials.address);
+      if (!hasSession) {
         isLoggedIn = false;
         return;
       }
@@ -84,11 +86,11 @@ class GroupListController extends ChangeNotifier {
       final credentials = EthPrivateKey(hexToBytes(key!));
 
       final hashRequest = HashRequest(types: [
-        'string',
-        'address'
+        'address',
+        'bytes32',
       ], values: [
-        phoneNumber.trim(),
         credentials.address.hexEip55,
+        bytesToHex(convertStringToBytes32(phoneNumber.trim()), include0x: true),
       ]);
 
       final hash = await GetIt.I.get<AuthService>().hash(hashRequest);
@@ -136,39 +138,69 @@ class GroupListController extends ChangeNotifier {
 
       final hashRequest = HashRequest(types: [
         "address",
-        "string",
-        "address",
-        "string"
+        "bytes32",
       ], values: [
         authResponse!.provider,
-        phoneNumber.trim(),
-        credentials.address.hexEip55,
-        salt,
+        bytesToHex(convertStringToBytes32(phoneNumber.trim()), include0x: true),
       ]);
 
       final hash = await GetIt.I.get<AuthService>().hash(hashRequest);
 
       final signature = credentials.signPersonalMessageToUint8List(hexToBytes(hash.hash));
 
-      final calldata = GetIt.I
-          .get<SessionAccountManagerContract>()
-          .startSessionCallData(salt, credentials.address, hexToBytes(authResponse!.signature), signature);
-
       final dest = await GetIt.I.get<SessionAccountManagerContract>().getAddress(phoneNumber.trim());
 
-      final (_, userop) = await GetIt.I
-          .get<Web3Service>()
-          .prepareUserop(credentials, dest, phoneNumber.trim(), [dest.hexEip55], [calldata]);
+      final saltHashRequest = HashRequest(types: [
+        "address",
+        "bytes32",
+        "address",
+        "string"
+      ], values: [
+        authResponse!.provider,
+        bytesToHex(convertStringToBytes32(phoneNumber.trim()), include0x: true),
+        credentials.address.hexEip55,
+        salt,
+      ]);
 
-      final tx = await GetIt.I.get<Web3Service>().submitUserop(userop);
-      if (tx == null) {
-        throw Exception('Transaction is null');
-      }
+      final saltHash = await GetIt.I.get<AuthService>().hash(saltHashRequest);
 
-      final success = await GetIt.I.get<Web3Service>().waitForTxSuccess(tx);
-      if (!success) {
-        throw Exception('Transaction failed');
-      }
+      final saltSignature = credentials.signPersonalMessageToUint8List(hexToBytes(saltHash.hash));
+
+      final startRequest = StartRequest(
+        secondFactor: phoneNumber.trim(),
+        salt: salt,
+        saltSignature: bytesToHex(saltSignature, include0x: true),
+        sessionAddress: credentials.address.hexEip55,
+        sessionSignature: bytesToHex(signature, include0x: true),
+      );
+
+      print(startRequest.toJson());
+
+      await GetIt.I.get<AuthService>().start(startRequest);
+
+      GetIt.I.get<LocalSessionRepo>().setPhoneNumber(phoneNumber.trim());
+
+      checkAuth();
+
+      // final calldata = GetIt.I
+      //     .get<SessionAccountManagerContract>()
+      //     .startSessionCallData(salt, credentials.address, hexToBytes(authResponse!.signature), signature);
+
+      // final dest = await GetIt.I.get<SessionAccountManagerContract>().getAddress(phoneNumber.trim());
+
+      // final (_, userop) = await GetIt.I
+      //     .get<Web3Service>()
+      //     .prepareUserop(credentials, dest, phoneNumber.trim(), [dest.hexEip55], [calldata]);
+
+      // final tx = await GetIt.I.get<Web3Service>().submitUserop(userop);
+      // if (tx == null) {
+      //   throw Exception('Transaction is null');
+      // }
+
+      // final success = await GetIt.I.get<Web3Service>().waitForTxSuccess(tx);
+      // if (!success) {
+      //   throw Exception('Transaction failed');
+      // }
 
       print('success');
     } catch (e, s) {

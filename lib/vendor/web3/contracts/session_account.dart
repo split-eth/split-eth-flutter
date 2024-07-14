@@ -21,6 +21,18 @@ class SessionAccountContract {
     return result[0] as EthereumAddress;
   }
 
+  Future<bool> hasValidSession(EthereumAddress sessionAddress) async {
+    final function = _contract.function('hasValidSession');
+
+    final result = await _client.call(
+      contract: _contract,
+      function: function,
+      params: [sessionAddress],
+    );
+
+    return result[0] as bool;
+  }
+
   Uint8List createAccountCallData(
     EthereumAddress provider,
     String salt,
