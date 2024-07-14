@@ -37,7 +37,7 @@ void main() async {
   GetIt.I.registerSingletonAsync(() async => GroupFactoryContract.init("0x616F422Cf3a9d2b7330Bb833b5C14Da685da8AC1"));
   GetIt.I.registerSingletonAsync(
     () async => SessionAccountManagerContract.init(
-        "0x7349b4b271d3592a4a95cc3Bb0063F7B6dd1fe35",
+        "0x57456a8f10582ec85c214130b8D478F895099ef3",
         GetIt.I.get<Web3Service>().ethClient,
         EthereumAddress(hexToBytes("0x9126F8137B6321D7C4dc4c45BAcDF7442221a461"))),
   );

@@ -12,6 +12,7 @@ import 'package:split_eth_flutter/vendor/web3/contracts/session_account_manager.
 import 'package:split_eth_flutter/vendor/web3/service.dart';
 import 'package:split_eth_flutter/vendor/web3/services/auth/auth.dart';
 import 'package:split_eth_flutter/vendor/web3/utils/uint8.dart';
+import 'package:web3dart/credentials.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -25,6 +26,7 @@ class GroupListController extends ChangeNotifier {
   SessionAccountContract? sessionAccountContract;
 
   String? key;
+  EthereumAddress? address;
   bool isLoggedIn = false;
   bool isAuthenticating = false;
 
@@ -52,9 +54,9 @@ class GroupListController extends ChangeNotifier {
         return false;
       }
 
-      final address = await GetIt.I.get<SessionAccountManagerContract>().getAddress(phoneNumber);
+      address = await GetIt.I.get<SessionAccountManagerContract>().getAddress(phoneNumber);
 
-      final sContract = await SessionAccountContract.init(address.hexEip55, GetIt.I.get<Web3Service>().ethClient);
+      final sContract = await SessionAccountContract.init(address!.hexEip55, GetIt.I.get<Web3Service>().ethClient);
 
       final credentials = EthPrivateKey(hexToBytes(key!));
 
@@ -116,14 +118,6 @@ class GroupListController extends ChangeNotifier {
       final hash = await GetIt.I.get<AuthService>().hash(hashRequest);
 
       final signature = credentials.signPersonalMessageToUint8List(hexToBytes(hash.hash));
-      // final signature = await signHash(credentials, hash);
-
-      print('phoneNumber: ${phoneNumber.trim()}');
-      print('address: ${credentials.address.hexEip55}');
-      // print('hash: ${bytesToHex(hash, include0x: true)}');
-      print('hash: $hash');
-      print('signature: ${bytesToHex(signature, include0x: true)}');
-      // print('signature: $signature');
 
       final request = AuthRequest(
         secondFactor: phoneNumber.trim(),
@@ -173,8 +167,6 @@ class GroupListController extends ChangeNotifier {
 
       final signature = credentials.signPersonalMessageToUint8List(hexToBytes(hash.hash));
 
-      final dest = await GetIt.I.get<SessionAccountManagerContract>().getAddress(phoneNumber.trim());
-
       final saltHashRequest = HashRequest(types: [
         "address",
         "bytes32",
@@ -198,8 +190,6 @@ class GroupListController extends ChangeNotifier {
         sessionAddress: credentials.address.hexEip55,
         sessionSignature: bytesToHex(signature, include0x: true),
       );
-
-      print(startRequest.toJson());
 
       await GetIt.I.get<AuthService>().start(startRequest);
 

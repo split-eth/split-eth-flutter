@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:split_eth_flutter/atoms/seth_text_field.dart';
 import 'package:split_eth_flutter/features/group/controller.dart';
+import 'package:split_eth_flutter/features/group_list/controller.dart';
 import 'package:split_eth_flutter/models/group_entry.dart';
 import 'package:split_eth_flutter/value_objects/group_entry_id.dart';
 import 'package:web3dart/web3dart.dart';
@@ -19,6 +20,22 @@ class AddGroupEntryView extends StatefulWidget {
 class _AddGroupEntryViewState extends State<AddGroupEntryView> {
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // post frame callback
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // initial requests go here
+
+      onLoad();
+    });
+  }
+
+  void onLoad() async {
+    await context.read<GroupController>().loadAccount();
+  }
 
   @override
   void dispose() {
@@ -54,16 +71,9 @@ class _AddGroupEntryViewState extends State<AddGroupEntryView> {
     );
   }
 
-  void _addEntry() {
-    final GroupEntry groupEntry = GroupEntry(
-      id: GroupEntryId.random(),
-      address: EthereumAddress.fromHex('0x0'), // TODO
-      name: 'TODO', // TODO
-      amount: BigInt.parse(_valueController.text),
-      note: _noteController.text,
-    );
+  void _addEntry() async {
+    context.read<GroupController>().addEntry(BigInt.parse(_valueController.text), _noteController.text);
 
-    context.read<GroupController>().addEntry(groupEntry);
     context.pop();
   }
 }

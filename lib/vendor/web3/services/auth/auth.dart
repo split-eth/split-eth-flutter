@@ -103,6 +103,21 @@ class StartRequest {
   }
 }
 
+class SplitRequest {
+  final String group;
+
+  SplitRequest({
+    required this.group,
+  });
+
+  // toJson method
+  Map<String, dynamic> toJson() {
+    return {
+      'group': group,
+    };
+  }
+}
+
 class AuthService {
   final APIService _apiService;
 
@@ -129,6 +144,15 @@ class AuthService {
   Future<void> start(StartRequest request) async {
     final response = await _apiService.post(
       url: '/session/start',
+      body: request.toJson(),
+    );
+
+    return;
+  }
+
+  Future<void> split(SplitRequest request) async {
+    final response = await _apiService.post(
+      url: '/split',
       body: request.toJson(),
     );
 

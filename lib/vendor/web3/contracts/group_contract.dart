@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:split_eth_flutter/models/group_entry.dart';
 import 'package:split_eth_flutter/value_objects/group_entry_id.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
@@ -60,6 +62,12 @@ class GroupContract {
     );
 
     return result[0] as String;
+  }
+
+  Uint8List addEntryCallData(EthereumAddress address, BigInt amount, String note) {
+    final function = _contract.function('addExpense');
+
+    return function.encodeCall([address, amount, note]);
   }
 
   static Future<GroupContract> init(EthereumAddress contractAddress) async {
