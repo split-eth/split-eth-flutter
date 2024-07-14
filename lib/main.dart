@@ -4,6 +4,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:split_eth_flutter/repos/remote_group_repo.dart';
 import 'package:split_eth_flutter/repos/session_repo.dart';
 import 'package:split_eth_flutter/router.dart';
 import 'package:split_eth_flutter/vendor/web3/config.dart';
@@ -42,6 +43,7 @@ void main() async {
   );
 
   GetIt.I.registerSingleton(AuthService(apiService: APIService(baseURL: 'http://172.20.10.4:3000/api/v1')));
+  GetIt.I.registerLazySingleton(() => RemoteGroupRepo());
 
   // GetIt.I.get<LocalGroupRepo>().removeAllGroups();
 

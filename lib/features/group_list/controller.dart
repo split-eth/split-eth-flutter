@@ -3,13 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:split_eth_flutter/models/group_entry.dart';
 import 'package:split_eth_flutter/repos/local_group_repo.dart';
+import 'package:split_eth_flutter/repos/remote_group_repo.dart';
 import 'package:split_eth_flutter/repos/session_repo.dart';
 import 'package:split_eth_flutter/value_objects/group_id.dart';
-import 'package:split_eth_flutter/vendor/web3/config.dart';
-import 'package:split_eth_flutter/vendor/web3/contracts/group_contract.dart';
-import 'package:split_eth_flutter/vendor/web3/contracts/group_factory_contract.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/session_account.dart';
 import 'package:split_eth_flutter/vendor/web3/contracts/session_account_manager.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
@@ -22,8 +19,7 @@ import '../../models/group.dart';
 class GroupListController extends ChangeNotifier {
   GroupListController._();
 
-  final Config _config = GetIt.I.get<Config>();
-  final GroupFactoryContract _groupFactoryContract = GetIt.I.get<GroupFactoryContract>();
+  final RemoteGroupRepo _remoteGroupRepo = GetIt.I.get<RemoteGroupRepo>();
 
   SessionAccountContract? sessionAccountContract;
 
@@ -189,33 +185,8 @@ class GroupListController extends ChangeNotifier {
     if (GetIt.I.get<LocalGroupRepo>().hasGroup(groupId)) {
       throw Exception('You are already in this group');
     }
-    Group group = await getRemoteGroup(groupId);
+    Group group = await _remoteGroupRepo.getRemoteGroup(groupId);
     addLocalGroup(group);
-  }
-
-  Future<Group> getRemoteGroup(GroupId groupId) async {
-    EthereumAddress groupAddress = await _groupFactoryContract.getAddress(
-      EthereumAddress.fromHex(_config.token.address),
-      groupId.toString(),
-    );
-
-    final GroupContract groupContract = await GroupContract.init(groupAddress);
-
-    late final String name;
-    try {
-      name = await groupContract.getName();
-    } on RangeError {
-      throw Exception('Group does not exist');
-    }
-
-    final List<GroupEntry> entries = await groupContract.getExpenses();
-
-    return Group(
-      id: groupId,
-      name: name,
-      address: groupAddress,
-      entries: entries,
-    );
   }
 
   void addLocalGroup(Group group) {
