@@ -58,7 +58,7 @@ class _AddGroupEntryViewState extends State<AddGroupEntryView> {
     final GroupEntry groupEntry = GroupEntry(
       id: GroupEntryId.random(),
       address: EthereumAddress.fromHex('0x0'), // TODO
-      amount: int.parse(_valueController.text),
+      amount: BigInt.parse(_valueController.text),
       note: _noteController.text,
     );
 

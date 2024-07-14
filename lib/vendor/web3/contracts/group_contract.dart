@@ -28,13 +28,12 @@ class GroupContract {
       params: [],
     );
 
-    // TODO
-    return result.map((tuple) {
+    return result.map((data) {
       return GroupEntry(
         id: GroupEntryId.random(),
-        address: EthereumAddress.fromHex(zeroAddress), // TODO
-        amount: 0, // TODO
-        note: 'TODO', // TODO
+        address: data[0][0] as EthereumAddress,
+        amount: data[0][1] as BigInt,
+        note: data[0][2] as String,
       );
     }).toList();
   }

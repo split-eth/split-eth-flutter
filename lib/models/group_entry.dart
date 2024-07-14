@@ -19,7 +19,7 @@ class GroupEntry extends Equatable {
 
   final GroupEntryId id;
   final EthereumAddress address;
-  final int amount;
+  final BigInt amount;
   final String note;
 
   @override
