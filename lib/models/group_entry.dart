@@ -24,6 +24,22 @@ class GroupEntry extends Equatable {
   final BigInt amount;
   final String note;
 
+  GroupEntry copyWith({
+    GroupEntryId? id,
+    EthereumAddress? address,
+    String? name,
+    BigInt? amount,
+    String? note,
+  }) {
+    return GroupEntry(
+      id: id ?? this.id,
+      address: address ?? this.address,
+      name: name ?? this.name,
+      amount: amount ?? this.amount,
+      note: note ?? this.note,
+    );
+  }
+
   @override
   List<Object> get props => [id];
 
