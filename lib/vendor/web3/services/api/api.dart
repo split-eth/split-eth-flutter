@@ -71,6 +71,8 @@ class APIService {
       mergedHeaders.addAll(headers);
     }
 
+    print('$baseURL${url ?? ''}');
+
     final response = await http
         .post(
           Uri.parse('$baseURL${url ?? ''}'),
@@ -78,6 +80,8 @@ class APIService {
           body: jsonEncode(body),
         )
         .timeout(const Duration(seconds: netTimeoutSeconds));
+
+    print(response.statusCode);
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       switch (response.statusCode) {

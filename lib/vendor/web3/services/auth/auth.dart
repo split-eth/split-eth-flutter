@@ -1,5 +1,37 @@
 import 'package:split_eth_flutter/vendor/web3/services/api/api.dart';
 
+class HashRequest {
+  final List<String> types;
+  final List<dynamic> values;
+
+  HashRequest({
+    required this.types,
+    required this.values,
+  });
+
+  // toJson method
+  Map<String, dynamic> toJson() {
+    return {
+      'types': types,
+      'values': values,
+    };
+  }
+}
+
+class HashResponse {
+  final String hash;
+
+  HashResponse({
+    required this.hash,
+  });
+
+  factory HashResponse.fromJson(Map<String, dynamic> json) {
+    return HashResponse(
+      hash: json['hash'],
+    );
+  }
+}
+
 class AuthRequest {
   final String secondFactor;
   final String sessionAddress;
@@ -48,6 +80,15 @@ class AuthService {
   final APIService _apiService;
 
   AuthService({required APIService apiService}) : _apiService = apiService;
+
+  Future<HashResponse> hash(HashRequest request) async {
+    final response = await _apiService.post(
+      url: '/hash',
+      body: request.toJson(),
+    );
+
+    return HashResponse.fromJson(response);
+  }
 
   Future<AuthResponse> request(AuthRequest request) async {
     final response = await _apiService.post(
