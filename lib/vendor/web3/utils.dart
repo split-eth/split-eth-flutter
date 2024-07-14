@@ -7,6 +7,16 @@ import 'package:split_eth_flutter/vendor/web3/utils/uint8.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 
+String formatNumber(BigInt number, int decimals, [int visibleDecimals = 2]) {
+  assert(decimals >= 0);
+  assert(visibleDecimals >= 1);
+  assert(decimals >= visibleDecimals);
+  final str = number.toString().padLeft(decimals + 1, '0');
+  final beforeDot = str.substring(0, str.length - decimals);
+  final afterDot = str.substring(str.length - decimals, str.length - decimals + visibleDecimals);
+  return '$beforeDot.$afterDot';
+}
+
 String addressToShortString(EthereumAddress address) {
   return address.hex.substring(0, 6);
 }
