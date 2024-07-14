@@ -70,7 +70,10 @@ class AuthView extends StatelessWidget {
     context.read<GroupListController>().updateCode(value);
   }
 
-  void handleStartSession(BuildContext context) {
-    context.read<GroupListController>().startSession();
+  void handleStartSession(BuildContext context) async {
+    final success = await context.read<GroupListController>().startSession();
+    if (success && context.mounted) {
+      context.pop();
+    }
   }
 }

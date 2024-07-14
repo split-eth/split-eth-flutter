@@ -42,7 +42,8 @@ void main() async {
         EthereumAddress(hexToBytes("0x9126F8137B6321D7C4dc4c45BAcDF7442221a461"))),
   );
 
-  GetIt.I.registerSingleton(AuthService(apiService: APIService(baseURL: 'http://172.20.10.4:3000/api/v1')));
+  GetIt.I
+      .registerSingleton(AuthService(apiService: APIService(baseURL: 'https://spliteth-accounts.vercel.app/api/v1')));
   GetIt.I.registerLazySingleton(() => RemoteGroupRepo());
 
   // GetIt.I.get<LocalGroupRepo>().removeAllGroups();

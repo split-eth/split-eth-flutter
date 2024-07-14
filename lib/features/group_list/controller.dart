@@ -32,16 +32,16 @@ class GroupListController extends ChangeNotifier {
 
   AuthResponse? authResponse;
 
-  Future<void> checkAuth() async {
+  Future<bool> checkAuth() async {
     try {
       key = GetIt.I.get<LocalSessionRepo>().getSessionKey();
       if (key == null) {
-        return;
+        return false;
       }
 
       phoneNumber = GetIt.I.get<LocalSessionRepo>().getPhoneNumber() ?? '';
       if (phoneNumber.isEmpty) {
-        return;
+        return false;
       }
 
       final address = await GetIt.I.get<SessionAccountManagerContract>().getAddress(phoneNumber);
@@ -53,16 +53,18 @@ class GroupListController extends ChangeNotifier {
       final hasSession = await sContract.hasValidSession(credentials.address);
       if (!hasSession) {
         isLoggedIn = false;
-        return;
+        return false;
       }
 
       isLoggedIn = true;
+      return true;
     } catch (e, s) {
       print(e);
       print(s);
       isLoggedIn = false;
     }
     notifyListeners();
+    return false;
   }
 
   void updatePhoneNumber(String value) {
@@ -122,7 +124,7 @@ class GroupListController extends ChangeNotifier {
     }
   }
 
-  Future<void> startSession() async {
+  Future<bool> startSession() async {
     try {
       final String salt = code;
       if (code.isEmpty) {
@@ -183,8 +185,6 @@ class GroupListController extends ChangeNotifier {
 
       GetIt.I.get<LocalSessionRepo>().setPhoneNumber(phoneNumber.trim());
 
-      checkAuth();
-
       // final calldata = GetIt.I
       //     .get<SessionAccountManagerContract>()
       //     .startSessionCallData(salt, credentials.address, hexToBytes(authResponse!.signature), signature);
@@ -206,10 +206,13 @@ class GroupListController extends ChangeNotifier {
       // }
 
       print('success');
+      return checkAuth();
     } catch (e, s) {
       print(e);
       print(s);
     }
+
+    return false;
   }
 
   List<Group> get groups => GetIt.I.get<LocalGroupRepo>().getGroups();
