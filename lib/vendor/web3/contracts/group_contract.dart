@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+import 'package:split_eth_flutter/models/group_balance.dart';
 import 'package:split_eth_flutter/models/group_entry.dart';
 import 'package:split_eth_flutter/value_objects/group_entry_id.dart';
 import 'package:split_eth_flutter/vendor/web3/service.dart';
@@ -42,24 +44,44 @@ class GroupContract {
 
     final usernames = await getUsernames(entries.map((entry) => entry.address).toList());
 
-    return entries.map((entry) {
-      final String name = (usernames[entry.address] ?? '').trim();
-      return entry.copyWith(name: name.isNotEmpty ? name : 'unknown');
-    }).toList();
+    return entries.map((entry) => entry.copyWith(name: usernames[entry.address] ?? 'unknown')).toList();
   }
 
-  Future<Map<EthereumAddress, String>> getUsernames(List<EthereumAddress> addresses) async {
+  Future<Map<EthereumAddress, String?>> getUsernames(List<EthereumAddress> addresses) async {
     return {for (var address in addresses) address: await getUsername(address)};
   }
 
-  Future<String> getUsername(EthereumAddress userAddress) async {
+  Future<String?> getUsername(EthereumAddress userAddress) async {
     final result = await _client.call(
       contract: _contract,
       function: _contract.function('userNames'),
       params: [userAddress],
     );
 
-    return result[0] as String;
+    final String username = (result[0] as String).trim();
+    return username.isNotEmpty ? username : null;
+  }
+
+  Future<List<GroupBalance>> getBalances() async {
+    final result = await _client.call(
+      contract: _contract,
+      function: _contract.function('getSummaryList'),
+      params: [],
+    );
+
+    final List<EthereumAddress> addresses = (result[0] as List<dynamic>).map((a) => a as EthereumAddress).toList();
+    final List<BigInt> balances = (result[1] as List<dynamic>).map((balance) => balance as BigInt).toList();
+    final usernames = await getUsernames(addresses);
+
+    assert(addresses.length == balances.length);
+
+    return addresses.mapIndexed((index, address) {
+      return GroupBalance(
+        address: address,
+        name: usernames[address] ?? 'unknown',
+        amount: balances[index],
+      );
+    }).toList();
   }
 
   static Future<GroupContract> init(EthereumAddress contractAddress) async {
