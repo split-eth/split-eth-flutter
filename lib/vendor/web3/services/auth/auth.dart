@@ -76,6 +76,33 @@ class AuthResponse {
   }
 }
 
+class StartRequest {
+  final String secondFactor;
+  final String salt;
+  final String saltSignature;
+  final String sessionAddress;
+  final String sessionSignature;
+
+  StartRequest({
+    required this.secondFactor,
+    required this.salt,
+    required this.saltSignature,
+    required this.sessionAddress,
+    required this.sessionSignature,
+  });
+
+  // toJson method
+  Map<String, dynamic> toJson() {
+    return {
+      'secondFactor': secondFactor,
+      'salt': salt,
+      'saltSignature': saltSignature,
+      'sessionAddress': sessionAddress,
+      'sessionSignature': sessionSignature,
+    };
+  }
+}
+
 class AuthService {
   final APIService _apiService;
 
@@ -97,5 +124,14 @@ class AuthService {
     );
 
     return AuthResponse.fromJson(response);
+  }
+
+  Future<void> start(StartRequest request) async {
+    final response = await _apiService.post(
+      url: '/session/start',
+      body: request.toJson(),
+    );
+
+    return;
   }
 }
