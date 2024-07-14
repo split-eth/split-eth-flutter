@@ -32,6 +32,7 @@ class GroupContract {
       return GroupEntry(
         id: GroupEntryId.random(),
         address: data[0][0] as EthereumAddress,
+        name: 'TODO!!', // TODO
         amount: data[0][1] as BigInt,
         note: data[0][2] as String,
       );

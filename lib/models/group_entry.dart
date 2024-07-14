@@ -13,12 +13,14 @@ class GroupEntry extends Equatable {
   const GroupEntry({
     required this.id,
     required this.address,
+    required this.name,
     required this.amount,
     required this.note,
   });
 
   final GroupEntryId id;
   final EthereumAddress address;
+  final String name;
   final BigInt amount;
   final String note;
 

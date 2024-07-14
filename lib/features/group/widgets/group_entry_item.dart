@@ -33,7 +33,7 @@ class GroupEntryItem extends StatelessWidget {
       ),
       child: ListTile(
           title: Text(groupEntry.note),
-          subtitle: Text('paid by TODO (${addressToShortString(groupEntry.address)}...)'),
+          subtitle: Text('paid by ${groupEntry.name} (${addressToShortString(groupEntry.address)}...)'),
           trailing: Text.rich(
             TextSpan(
               children: [
