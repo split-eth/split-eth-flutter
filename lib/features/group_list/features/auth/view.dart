@@ -14,10 +14,9 @@ class AuthView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final phoneNumber = context.select((GroupListController c) => c.phoneNumber);
+    final isAuthentication = context.select((GroupListController c) => c.isAuthenticating);
 
     final authResponse = context.select((GroupListController c) => c.authResponse);
-
-    print('authResponse: $authResponse');
 
     return SimpleDialog(
       contentPadding: const EdgeInsets.all(24),
@@ -53,6 +52,21 @@ class AuthView extends StatelessWidget {
             icon: const Icon(Icons.lock),
             label: const Text('Start session'),
             onPressed: () => handleStartSession(context),
+          ),
+        if (isAuthentication)
+          const SizedBox(
+            height: 20,
+          ),
+        if (isAuthentication)
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(),
+              ),
+            ],
           ),
       ],
     );

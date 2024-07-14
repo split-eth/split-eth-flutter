@@ -26,6 +26,7 @@ class GroupListController extends ChangeNotifier {
 
   String? key;
   bool isLoggedIn = false;
+  bool isAuthenticating = false;
 
   String code = '';
   String phoneNumber = '';
@@ -34,13 +35,20 @@ class GroupListController extends ChangeNotifier {
 
   Future<bool> checkAuth() async {
     try {
+      isAuthenticating = true;
+      notifyListeners();
+
       key = GetIt.I.get<LocalSessionRepo>().getSessionKey();
       if (key == null) {
+        isAuthenticating = false;
+        notifyListeners();
         return false;
       }
 
       phoneNumber = GetIt.I.get<LocalSessionRepo>().getPhoneNumber() ?? '';
       if (phoneNumber.isEmpty) {
+        isAuthenticating = false;
+        notifyListeners();
         return false;
       }
 
@@ -53,16 +61,21 @@ class GroupListController extends ChangeNotifier {
       final hasSession = await sContract.hasValidSession(credentials.address);
       if (!hasSession) {
         isLoggedIn = false;
+        isAuthenticating = false;
+        notifyListeners();
         return false;
       }
 
       isLoggedIn = true;
+      isAuthenticating = false;
+      notifyListeners();
       return true;
     } catch (e, s) {
       print(e);
       print(s);
       isLoggedIn = false;
     }
+    isAuthenticating = false;
     notifyListeners();
     return false;
   }
@@ -79,6 +92,8 @@ class GroupListController extends ChangeNotifier {
 
   Future<void> logIn() async {
     try {
+      isAuthenticating = true;
+      notifyListeners();
       if (key == null) {
         final random = Random.secure();
         final credentials = EthPrivateKey.createRandom(random);
@@ -122,10 +137,15 @@ class GroupListController extends ChangeNotifier {
       print(e);
       print(s);
     }
+
+    isAuthenticating = false;
+    notifyListeners();
   }
 
   Future<bool> startSession() async {
     try {
+      isAuthenticating = true;
+      notifyListeners();
       final String salt = code;
       if (code.isEmpty) {
         throw Exception('Code is empty');
@@ -206,11 +226,16 @@ class GroupListController extends ChangeNotifier {
       // }
 
       print('success');
+      isAuthenticating = false;
+      notifyListeners();
       return checkAuth();
     } catch (e, s) {
       print(e);
       print(s);
     }
+
+    isAuthenticating = false;
+    notifyListeners();
 
     return false;
   }
